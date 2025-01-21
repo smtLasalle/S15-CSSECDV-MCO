@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css?family=Lilita One:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Secular One:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+    max-height: 500px;
+}
+
+.divider {
+    float: right;
+    width: 60%;
+}
+
+#wave {
+    float: left;
+    height: 710px;
+    background-color: transparent;
+}
+
+#rectangle {
+    width: 79.6%;
+    height: 710px;
+    background-color: rgb(121, 199, 240);
+    position: relative;
+    float: right;
+}
+
+.header {
+    width: 100%;
+    height: 80px;
+}
+
+#logo {
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-left: 270px;
+    margin-top: 5px;
+}
+
+.header-title {
+    font-family: "Lilita One";
+    font-size: 50px;
+    position: absolute;
+    margin-left: 350px;
+    
+}
+
+.header-subtitle {
+    position: absolute;
+    font-family: "Roboto";
+    font-size: 22px;
+    margin-left: 330px;
+    margin-top: 55px;
+}
+
+.buttons {
+    font-family: "Secular One";
+    font-size: 25px;
+    display: flex;
+    position: absolute;
+    margin-left: 500px;
+    margin-top: 25px;
+}
+
+#signup {
+    width: 130px;
+    border-radius: 40px;
+    border: none;
+    background-color: white;
+} 
+
+#login, #about {
+    color: white;
+    background-color: transparent;
+    border: none;
+    padding-right: 40px;
+}
+
+#page-image {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    margin-top: 150px;
+    margin-left: 100px;
+}
+
+.body-content {
+    font-family: "Roboto"; 
+}
+
+.body-head {
+    font-weight: 900;
+    font-size: 50px;
+    padding-top: 150px;
+    padding-left: 130px;
+}
+
+.body-text {
+    font-size: 25px;
+    padding-left: 150px;
+}

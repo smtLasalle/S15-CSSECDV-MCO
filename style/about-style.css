@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css?family=Lilita One:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Secular One:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --text-color:rgb(237, 233, 232);
+}
+
+body {
+    background-color: rgb(237, 233, 232);
+}
+
+.title {
+    font-family: fantasy;
+    font-size: 80px;
+}
+
+.header {
+    width: 100%;
+}
+
+.header-title {
+    font-family: "Lilita One";
+    font-size: 35px;
+    position: absolute;
+    padding-left: 70px;
+    padding-top: 8px;
+}
+
+.header-subtitle {
+    font-family: "Roboto";
+    font-size: 15px;
+    padding-top: 47px;
+    padding-left: 55px;
+}
+
+#logo {
+    position: absolute;
+    padding-left: 5px;
+    padding-top: 5px;
+    width: 65px;
+    height: 65px;
+}
+
+.page {
+    background-color: rgb(121, 199, 240);
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: var(--text-color);
+}
+
+.page-title {
+    font-family: "Secular One";
+    font-size: 70px;
+    margin-left: 50px;
+}
+
+.page-desc {
+    font-family: "Roboto";
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.desc-title {
+    font-family: "Roboto";
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.desc-body {
+    font-family: "Roboto";
+    font-size: 14px;
+}
+
+.top-half .text-container {
+    text-align: center;
+    padding-bottom: 2px;
+    margin-top: 50px;
+    margin-left: 600px;
+    margin-right: 50px;
+}
+
+.top-half img {
+    width: 400px;
+    height: 400px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 150px;
+}
+
+.bottom-half .text-container{
+    text-align: center;
+    margin-top: 80px;
+    margin-left: 50px;
+    margin-right: 600px;
+    padding-bottom: 2px;
+}
+
+.bottom-half img {
+    float: right;
+    width: 400px;
+    height: 400px;
+    margin-left: auto;
+    margin-right: 150px;
+}

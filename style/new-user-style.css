@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css?family=Abel:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Abel", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: skyblue;
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.rectangle {
+    width: 800px;
+    height: 660px;
+    background: whitesmoke;
+    border-radius: 20px;
+}
+
+.rectangle h1 {
+    font-size: 50px;
+    text-align: center;
+    padding: 10px 0 10px 0;
+}
+
+.rectangle form .user-details {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rectangle .input-box {
+    position: relative;
+    background: transparent;
+    margin: 30px 20px;
+    border-bottom: 3px solid lightblue;
+    width: 350px;
+}
+
+.input-box input {
+    width: 100%;
+    height: 40px;
+    padding: 0 35px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 35px;
+    color: lightblue;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.input-box i {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    color: lightblue;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.input-box span::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: skyblue;
+    transition: 0.5s;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+    top: -5px;
+    color: skyblue;
+}
+
+.forgot {
+    margin: -20px 0 20px 20px;
+    color: skyblue;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}
+
+.user-type input[type="radio"] {
+    display: none;
+}
+
+.user-type label {
+    position: relative;
+    color: skyblue;
+    font-size: 20px;
+    margin: -5px 0px 10px 200px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-type label:before {
+    content: "";
+    height: 10px;
+    width: 10px;
+    border: 3px solid skyblue;
+    border-radius: 30%;
+    margin-right: 5px;
+}
+
+input[type="radio"]:checked + label:before{
+    background-color: skyblue; 
+}
+
+input[type="submit"] {
+    margin: 20px 0px 20px 150px;
+    width: 60%;
+    height: 50px;
+    border: 3px solid skyblue;
+    border-radius: 10px;
+    background: skyblue;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+   border-color: steelblue;
+   transition: 0.5s;
+}
+
+.new-user {
+    margin: 5px 0px;
+    text-align: center;
+    font-size: 18px;
+    color: skyblue;
+    margin-bottom: 23px;
+}
+
+.new-user a {
+    color: steelblue;
+    text-decoration: none;
+}
+
+.new-user a:hover {
+    text-decoration: underline;
+}
+
+#footer-text {
+    text-align: center;
+}
