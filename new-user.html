@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User | PennyWise</title>
+
+    <link rel="icon" href="image/logo.png">
+
+    <!-- External CSS -->
+    <link rel = "stylesheet" href = "style/new-user-style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="rectangle">
+        <form action="child-dashboard.html" method="get">
+            <h1>SIGN UP</h1>
+        <div class="user-details">
+            <div class="input-box">
+                <input text="text"  name="firstName">
+                <span></span>
+                <i class="bx bxs-user"></i>
+                <label>First Name</label>
+            </div>
+            <div class="input-box">
+                <input type="text"  name="lastName">
+                <span></span>
+                <i class='bx bxs-user'></i>
+                <label>Last Name</label>
+            </div>
+            <div class="input-box">
+                <input type="text"  name="username">
+                <span></span>
+                <i class='bx bxs-user'></i>
+                <label>Username</label>
+            </div>
+            <div class="input-box">
+                <input type="text"  name="email">
+                <span></span>
+                <i class='bx bxs-envelope' ></i>
+                <label>Email</label>
+            </div>
+            <div class="input-box">
+                <input type="password"  name="password">
+                <span></span>
+                <i class='bx bxs-lock-alt'></i>
+                <label>Password</label>
+            </div>
+            <div class="input-box">
+                <input type="password"  name="confirmPassword">
+                <span></span>
+                <i class='bx bxs-lock-alt'></i>
+                <label>Confirm Password</label>
+            </div>
+            <div class="user-type">
+                <input type="radio" name="accountType" id="parent" value="true">
+                <label for="parent">Parent</label>
+                <input type="radio" name="accountType" id="child" checked="checked" value="false">
+                <label for="child">Child</label>
+            </div>
+        </div>
+                <input type="submit" value="SIGN UP">
+
+            <div class="new-user">
+                Already have an account? <a href="old-user.html">Sign-in</a>
+            </div>
+        </form>
+
+        <div id="footer-text">By clicking the Sign Up button, you agree to our <a href="terms_and_conditions.html">Terms and Conditions</a> and <a href="privacy_policy.html">Privacy Policy</a></div>
+    </div>
+
+</body>
+</html>
