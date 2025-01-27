@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Parent | PennyWise</title>
+
+    <link rel="icon" href="image/logo.png">
+
+    <!-- External CSS -->
+    <link rel = "stylesheet" href = "style/parent-settings.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="header">
+            <img src="image/logo.png" id="logo">
+            <div class="header-title">PennyWise</div>
+            <div class="header-subtitle">Kid-Friendly Budget Tracker</div>
+        </div>
+
+        <div class="nav-icons">
+            <a href="parent-profile.html">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="icon-label">Profile</div>
+            </a>
+
+            <a href="parent-dashboard.html">
+                <ion-icon name="grid-outline"></ion-icon>
+                <div class="icon-label">Dashboard</div>
+            </a>
+            
+            <a href="parent-mail.html">
+                <ion-icon name="mail-outline"></ion-icon>
+                <div class="icon-label">Inbox</div>
+            </a>
+            
+            <a href="parent-settings.html">
+                <ion-icon name="settings-outline"></ion-icon>
+                <div class="icon-label">Settings</div>
+            </a>
+
+            <a href="old-user.html">
+                <ion-icon name="exit-outline"></ion-icon>
+                <div class="icon-label">Log Out</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="left">
+            <a onclick="tabs(0)" class="tab active">
+                <h4>ACCOUNT</h4>
+            </a>
+            <a onclick="tabs(1)" class="tab">
+                <h4>PASSWORD</h4>
+            </a>
+            <a onclick="tabs(2)" class="tab">
+                <h4>HELP</h4>
+            </a>
+        </div>
+        <div class="right">
+            <div class="info">
+                <h3>Personal Info</h3>
+                <div class="info_data">
+                    <div class="data">
+                        <h4>Full Name</h4>
+                        <p>...... ........</p>
+                    </div>
+                    <div class="data">
+                        <h4>Username</h4>
+                        <input type="text" class="input" value="abcd">
+                    </div>
+                    <div class="data">
+                        <h4>Email</h4>
+                        <input type="email" class="input" value="abc@gmail.com">
+                    </div>
+                    <div class="data">
+                        <h4>Gender</h4>
+                        <input type="radio" id="male" name="gender" value="Male">
+                        <label for="male">MALE</label>
+                        <input type="radio" id="female" name="gender" value="Female">
+                        <label for="female">FEMALE</label>
+                    </div>
+                    <div class="data">
+                        <h4>Birthday</h4>
+                        <input type="date" id="birthday" name="birthday">
+                    </div>
+                </div>
+                <button class="btn">Update</button>
+            </div>
+            
+
+            <div class="info">
+                <h3>Change Password</h3>
+                <div class="info_data">
+                    <div class="data">
+                        <h4>New Password</h4>
+                        <input type="password" class="input">
+                    </div>
+                    <div class="data">
+                        <h4>Old Password</h4>
+                        <input type="password" class="input">
+                    </div>
+                </div>
+                <button class="btn">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript -->
+    <script>
+        const tabBtn = document.querySelectorAll(".tab");
+        const tab = document.querySelectorAll(".info");
+
+        function tabs(index) {
+            tabBtn.forEach(function (button, i) {
+                if (i === index) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+
+            tab.forEach(function (node, i) {
+                if (i === index) {
+                    node.style.display = "block";
+                } else {
+                    node.style.display = "none";
+                }
+            });
+        }
+
+        // Initialize the first tab as active
+        tabs(0);
+
+        // Add event listeners to tab buttons
+        tabBtn.forEach(function (button, index) {
+            button.addEventListener('click', function () {
+                tabs(index);
+            });
+        });
+    </script>
+
+</body>
+</html>

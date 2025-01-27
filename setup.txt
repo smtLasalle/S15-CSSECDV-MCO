@@ -1,0 +1,5 @@
+in CMD
+pip install flask mysql-connector-python
+run the SQL/secdevd_dump.sql file in sql server (using cmd or workbench)
+
+open CMD in this directory, run python app.py

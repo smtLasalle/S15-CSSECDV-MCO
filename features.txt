@@ -1,0 +1,13 @@
+TODO:
+1. Password Hashing
+2. Anti Redundancy of new signups
+3. Prof pic
+4. Anti brute force
+5. Email validation (front and back)
+6. Phone number validation (front and back)
+7. File upload type detection
+
+
+In progress:
+(2) Anti Redundancy
+        - Add checks to isolate username or email Redundancy
