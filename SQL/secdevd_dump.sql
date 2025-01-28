@@ -54,8 +54,9 @@ CREATE TABLE `web_user` (
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(75) NOT NULL,
-  `phone_number` varchar(15) DEFAULT NULL,
-  `password` varchar(25) DEFAULT NULL,
+  `phone_number` varchar(15) NOT NULL,
+  `password` varchar(25) NOT NULL,
+  `isParent` boolean NOT NULL,
   PRIMARY KEY (`id_num`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -67,7 +68,7 @@ CREATE TABLE `web_user` (
 
 LOCK TABLES `web_user` WRITE;
 /*!40000 ALTER TABLE `web_user` DISABLE KEYS */;
-INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969','somehashedpass'),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200','somehashedpass2'),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567','somehashedpass');
+INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969','somehashedpass',1),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200','somehashedpass2',0),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567','somehashedpass',1);
 /*!40000 ALTER TABLE `web_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

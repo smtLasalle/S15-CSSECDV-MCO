@@ -19,6 +19,7 @@ def getID(inc):
 
 def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNumber):
     #check if all fields have some text
+    flag = 0
     if (password==confirmPass and bool(username) and checkEmail 
         and bool(firstName) and bool(lastName) and checkPhone):
         flag = 1
@@ -31,10 +32,10 @@ def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNum
         return 0
     return flag
 
-def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber):
+def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber, isParent):
     cursor = db.cursor()
-    query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, password))
+    query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password, isParent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, password, isParent))
     db.commit()
 
 def checkPhone(phone):
@@ -47,4 +48,16 @@ def checkEmail(email):
     valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
     if valid:
         return 1
+    return 0
+
+def checkLogin(username, password):
+    cursor = db.cursor()
+    query = "SELECT * FROM web_user WHERE username = %s AND password = %s"
+    cursor.execute(query,(username,password))
+    result = cursor.fetchone()
+    if result:
+        if result[7]:
+            return 2
+        else:
+            return 1
     return 0

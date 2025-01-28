@@ -12,10 +12,10 @@
 </head>
 <body>
     <div class="rectangle">
-        <form action="parent-dashboard.html" method="get" >
+        <form action="/login" method="post" >
             <h1>LOG IN</h1>
             <div class="input-box">
-                <input type="text" name="username">
+                <input type="text" name="username" value={{username}}>
                 <span></span>
                 <i class='bx bxs-user'></i>
                 <label>Username</label>
@@ -31,7 +31,7 @@
                 Forgot Password?
             </div>
 
-            <a href="/parent-dashboard.html">
+            <a href="/login">
                 <input type="submit" value="LOG IN">
             </a>
 

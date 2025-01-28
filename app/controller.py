@@ -18,16 +18,18 @@ def submit():
     phoneNumber = request.form['phoneNumber']
     password = request.form['password']
     confirmPass = request.form['confirmPassword']
+    isParent = request.form['accountType']
 
     #insert CHECK FOR REDUNDANCY
     if newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNumber):
-        insertNewUser(idnum,username,firstName,lastName, email, password, phoneNumber)
+        insertNewUser(idnum,username,firstName,lastName, email, password, phoneNumber, isParent)
         return render_template('old-user.html')
     
-    return render_template('/new-user.html')
+    return render_template('/new-user.html',email=email, firstName=firstName, lastName=lastName,
+                           phoneNumber=phoneNumber,username=username)
 
 @app.route('/old-user.html')
-def login():
+def loginPage():
     return render_template('old-user.html')
 
 @app.route('/new-user.html')
@@ -37,6 +39,15 @@ def signUp():
 @app.route('/about.html')
 def about():
     return render_template('about.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    logger = checkLogin(request.form['username'],request.form['password'])
+    if logger==2:
+        return render_template('/parent-dashboard.html')
+    elif logger==1:
+        return render_template('/child-dashboard.html')
+    return render_template('/old-user.html')
 
 @app.route('/parent-dashboard.html')
 def parentDashboard():
@@ -69,6 +80,10 @@ def childProfile():
 @app.route('/child-settings.html')
 def childSettings():
     return render_template('child-settings.html')
+
+@app.route('/logout')
+def logout():
+    return render_template('old-user.html')
 
 @app.errorhandler(404)
 def notFound():
