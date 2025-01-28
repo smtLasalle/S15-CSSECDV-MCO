@@ -55,6 +55,7 @@ CREATE TABLE `web_user` (
   `last_name` varchar(50) NOT NULL,
   `email` varchar(75) NOT NULL,
   `phone_number` varchar(15) DEFAULT NULL,
+  `password` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`id_num`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -66,11 +67,10 @@ CREATE TABLE `web_user` (
 
 LOCK TABLES `web_user` WRITE;
 /*!40000 ALTER TABLE `web_user` DISABLE KEYS */;
-INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969'),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200'),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567');
+INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969','somehashedpass'),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200','somehashedpass2'),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567','somehashedpass');
 /*!40000 ALTER TABLE `web_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
