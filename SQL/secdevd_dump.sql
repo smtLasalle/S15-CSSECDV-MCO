@@ -55,7 +55,7 @@ CREATE TABLE `web_user` (
   `last_name` varchar(50) NOT NULL,
   `email` varchar(75) NOT NULL,
   `phone_number` varchar(15) NOT NULL,
-  `password` varchar(25) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `isParent` boolean NOT NULL,
   PRIMARY KEY (`id_num`),
   UNIQUE KEY `username` (`username`)

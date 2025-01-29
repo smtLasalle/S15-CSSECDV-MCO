@@ -9,10 +9,11 @@ TODO:
 8. Login
 
 In progress:
-(2) Anti Redundancy - Finished - Improvable*
-        
+(2) Anti Redundancy - Finished - Improvable*        
 (5) Email validation (front and back) - Finished - Improvable**
 (6) Phone Validation (front and back) - Finished - Improvable**
+(8) Login and Logout - Finished
+(1) Password Hashing - Finished
 
 *Isolation between username or email redundancy without reloading the page is ideal
 **I feel like theres something to improve but i cant figure it out
