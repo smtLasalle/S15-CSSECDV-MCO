@@ -63,7 +63,7 @@ def checkLogin(username, password):
         print(password.encode('utf-8'))
         if bcrypt.checkpw(password.encode('utf-8'),result[6].encode('utf-8')):
             if result[7]:
-                return 2
+                return [username,2]
             else:
-                return 1
-    return 0
+                return [username,1]
+    return [username,0]

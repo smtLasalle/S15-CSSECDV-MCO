@@ -1,6 +1,35 @@
 from flask import render_template, request
 from app import app
 from app.model import *
+import time
+import threading
+
+registeredAccsAndTimes = []
+timeout = []
+
+def start_background_timer(username, rem):
+    def timer_function():
+        print('Countdown for ' + username + ' started')
+        time.sleep(100)  # Wait for the specified duration
+        print('Countdown for ' + username + ' finished')
+        if not stop_event.is_set():
+            timerEnd(username,rem)  # Call the callback function
+    stop_event = threading.Event()
+
+    timer_thread = threading.Thread(target=timer_function)
+    timer_thread.start()
+
+    return stop_event, timer_thread
+
+
+def timerEnd(username,rem):
+    global registeredAccsAndTimes
+    global timeout
+    registeredAccsAndTimes = [pair for pair in registeredAccsAndTimes if pair[0] != username]
+    if rem:
+        timeout.remove(username)
+
+    
 
 @app.route('/')
 def index():
@@ -42,11 +71,30 @@ def about():
 
 @app.route('/login', methods=['POST'])
 def login():
-    logger = checkLogin(request.form['username'],request.form['password'])
-    if logger==2:
+    global registeredAccsAndTimes
+    [username,logger] = checkLogin(request.form['username'],request.form['password'])
+    
+    if logger==2 and username not in timeout:
+        timerEnd(username,0)
         return render_template('/parent-dashboard.html')
-    elif logger==1:
+    elif logger==1 and username not in timeout:
+        timerEnd(username,0)
         return render_template('/child-dashboard.html')
+    
+    if not any(pair[0] == username for pair in registeredAccsAndTimes):
+        registeredAccsAndTimes.append([username,0])
+
+    for i,(user,count) in enumerate(registeredAccsAndTimes):
+        if username==user:
+            registeredAccsAndTimes[i][1] = count+1
+            if registeredAccsAndTimes[i][1]>=5:
+                print(username)
+                timeout.append(username)
+                stop_event, thread = start_background_timer(username,1)
+                
+
+    
+    print(registeredAccsAndTimes)
     return render_template('/old-user.html')
 
 @app.route('/parent-dashboard.html')
