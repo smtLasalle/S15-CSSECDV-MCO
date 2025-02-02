@@ -24,7 +24,8 @@ DROP TABLE IF EXISTS `profile_img`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profile_img` (
   `img_id` int NOT NULL AUTO_INCREMENT,
-  `img_url` varchar(255) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `data` MEDIUMBLOB NOT NULL,
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`img_id`),
   KEY `user_id` (`user_id`),
@@ -56,7 +57,7 @@ CREATE TABLE `web_user` (
   `email` varchar(75) NOT NULL,
   `phone_number` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `isParent` boolean NOT NULL,
+  `isParent` int NOT NULL,
   PRIMARY KEY (`id_num`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -66,11 +67,11 @@ CREATE TABLE `web_user` (
 -- Dumping data for table `web_user`
 --
 
-LOCK TABLES `web_user` WRITE;
-/*!40000 ALTER TABLE `web_user` DISABLE KEYS */;
-INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969','somehashedpass',1),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200','somehashedpass2',0),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567','somehashedpass',1);
-/*!40000 ALTER TABLE `web_user` ENABLE KEYS */;
-UNLOCK TABLES;
+#LOCK TABLES `web_user` WRITE;
+#/*!40000 ALTER TABLE `web_user` DISABLE KEYS */;
+#INSERT INTO `web_user` VALUES (1,'bananaenjoyer','Christian','Ibaoc','christian_ibaoc@dlsu.edu.ph','+639964206969','somehashedpass',1),(2,'racerist','Shawne','Tumalad','shawne_tumalad@dlsu.edu.ph','+639969694200','somehashedpass2',0),(3,'A2-ard','Jan','Relucio','jan_relucio@dlsu.edu.ph','+639761234567','somehashedpass',1);
+#/*!40000 ALTER TABLE `web_user` ENABLE KEYS */;
+#UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

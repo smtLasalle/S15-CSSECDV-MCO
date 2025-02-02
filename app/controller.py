@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request,make_response
 from app import app
 from app.model import *
 import time
@@ -74,12 +74,24 @@ def login():
     global registeredAccsAndTimes
     [username,logger] = checkLogin(request.form['username'],request.form['password'])
     
-    if logger==2 and username not in timeout:
+    if logger==2 and username not in timeout: #PARENT LOGIN
+        response = make_response(render_template('/parent-dashboard.html'))
+        response.set_cookie('un',str(username))
+        response.set_cookie('iP',str(logger-1))
         timerEnd(username,0)
-        return render_template('/parent-dashboard.html')
-    elif logger==1 and username not in timeout:
+        return response
+    elif logger==1 and username not in timeout: #CHILD LOGIN
+        response = make_response(render_template('/child-dashboard.html'))
+        response.set_cookie('un',str(username))
+        response.set_cookie('iP',str(logger-1))
         timerEnd(username,0)
-        return render_template('/child-dashboard.html')
+        return response
+    elif logger==-1 and username not in timeout: # ADMIN LOGIN
+        response = make_response(render_template('/admin.html'))
+        response.set_cookie('un',str(username))
+        response.set_cookie('iP',str(logger-1))
+        timerEnd(username,0)
+        return response
     
     if not any(pair[0] == username for pair in registeredAccsAndTimes):
         registeredAccsAndTimes.append([username,0])
@@ -97,6 +109,27 @@ def login():
     print(registeredAccsAndTimes)
     return render_template('/old-user.html')
 
+@app.route('/saveProfile', methods=['POST'])
+def saveProfile():
+    picture = request.files['file']
+    #filename = secure_filename(picture.filename)
+    filename = picture.filename
+    bytePicture = picture.read()
+    username = request.cookies.get('un')
+    isParent = request.cookies.get('iP')
+    if isParent=='1':
+        if saveToDB(bytePicture, filename, username): # PARENT PROFPIC CHANGES
+            return render_template('parent-dashboard.html')
+        return render_template('parent-profile.html')
+    elif isParent=='0':
+        if saveToDB(bytePicture, filename, username): # CHILD PROFPIC CHANGES
+            return render_template('child-dashboard.html')
+        return render_template('child-profile.html')
+    else:
+        if saveToDB(bytePicture, filename, username): # ADMIN PROFPIC CHANGES
+            return render_template('admin.html')
+        return render_template('admin.html')
+
 @app.route('/parent-dashboard.html')
 def parentDashboard():
     return render_template('parent-dashboard.html')
@@ -107,7 +140,11 @@ def parentMail():
 
 @app.route('/parent-profile.html')
 def parentProfile():
-    return render_template('parent-profile.html')
+    name=request.cookies.get('un')
+    [user,email,data] = retrieveData(name)
+    if data==0:
+        return render_template('parent-profile.html',username=user,email=email,image=data, defaultHidden="", profHidden="hidden")
+    return render_template('parent-profile.html',username=user,email=email,image=data, defaultHidden="hidden", profHidden="")
 
 @app.route('/parent-settings.html')
 def parentSettings():
@@ -123,7 +160,11 @@ def childMail():
 
 @app.route('/child-profile.html')
 def childProfile():
-    return render_template('child-profile.html')
+    name=request.cookies.get('un')
+    [user,email, data] = retrieveData(name)
+    if data==0:
+        return render_template('child-profile.html',username=user,email=email,image=data, defaultHidden="", profHidden="hidden")
+    return render_template('child-profile.html',username=user,email=email, image=data, defaultHidden="hidden", profHidden="")
 
 @app.route('/child-settings.html')
 def childSettings():

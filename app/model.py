@@ -1,5 +1,6 @@
 from app import db
 import bcrypt
+import base64
 
 def getID(inc):
     cursor = db.cursor()
@@ -12,6 +13,8 @@ def getID(inc):
         print("error somewhere", e)
     print('Getting ID')
     result = cursor.fetchone()
+    if not result[0]:
+        return 1
     print(result[0])
     if inc:
         return result[0]+1
@@ -62,8 +65,48 @@ def checkLogin(username, password):
         print(result[6].encode('utf-8'))
         print(password.encode('utf-8'))
         if bcrypt.checkpw(password.encode('utf-8'),result[6].encode('utf-8')):
-            if result[7]:
+            if result[7]==1:
                 return [username,2]
-            else:
+            elif result[7]==0:
                 return [username,1]
+            elif result[7]==-1:
+                return [username,-1]
     return [username,0]
+
+def retrieveData(username):
+    print("retrieve: "+ username)
+    cursor = db.cursor()
+    query = "SELECT * FROM web_user WHERE username = %s"
+    cursor.execute(query,[username])
+    result = cursor.fetchone()
+    query = "SELECT * FROM profile_img WHERE user_id=%s"
+    cursor.execute(query,[result[0]])
+    result2 = cursor.fetchone()
+    image = 0
+    if result2:
+        print("image found")
+        image = base64.b64encode(result2[2]).decode('utf-8')
+    return result[1],result[4], image
+
+def saveToDB(array,filename, username):
+    cursor = db.cursor()
+    query = "SELECT max(img_id) FROM profile_img"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    if result[0]:
+        max = result[0]+1
+    else:
+        max = 1
+
+    query = "SELECT id_num FROM web_user WHERE username=%s"
+    cursor.execute(query,[username])
+    result = cursor.fetchone()
+
+    try:
+        query = "INSERT INTO profile_img (img_id, filename, data, user_id) VALUES (%s,%s,%s,%s)"
+        cursor.execute(query,[max,filename,array,result[0]])
+        db.commit()
+    except Exception as e:
+        print("didnt work sad")
+        return False
+    return True
