@@ -1,6 +1,9 @@
 from app import db
 import bcrypt
 import base64
+import re
+
+salt = bcrypt.gensalt(rounds=30,prefix=b'2b')
 
 def getID(inc):
     cursor = db.cursor()
@@ -28,8 +31,8 @@ def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNum
         flag = 1
     
     cursor = db.cursor()
-    query = "SELECT * FROM web_user WHERE username = %s OR email = %s"
-    cursor.execute(query,(username,email))
+    query = "SELECT * FROM web_user WHERE username = %s OR email = %s OR phone_number=%s"
+    cursor.execute(query,(username,email,phoneNumber))
     result = cursor.fetchone()
     if result:
         return 0
@@ -37,17 +40,22 @@ def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNum
 
 def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber, isParent):
     bytes = password.encode('utf-8')
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(bytes,salt)
+    hashed = bcrypt.kdf(
+        password=bytes,
+        salt=salt,
+        desired_key_bytes=32,
+        rounds=178
+    )
     cursor = db.cursor()
+    print("pass: " + str(hashed))
     query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password, isParent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, hashed.decode('utf-8'), isParent))
+    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, str(hashed), isParent))
     db.commit()
 
 def checkPhone(phone):
-    if "+63" in phone:
-        if len(phone)==13:
-            return 1
+    valid = re.match(r'\+[6][3][\d]{10}$',phone)
+    if valid:
+        return 1
     return 0
 
 def checkEmail(email):
@@ -61,10 +69,16 @@ def checkLogin(username, password):
     query = "SELECT * FROM web_user WHERE username = %s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
+    hashed = bcrypt.kdf(
+        password=password.encode('utf-8'),
+        salt=salt,
+        desired_key_bytes=32,
+        rounds=178
+    )
     if result:
         print(result[6].encode('utf-8'))
         print(password.encode('utf-8'))
-        if bcrypt.checkpw(password.encode('utf-8'),result[6].encode('utf-8')):
+        if str(hashed)==str(result[6]):
             if result[7]==1:
                 return [username,2]
             elif result[7]==0:
