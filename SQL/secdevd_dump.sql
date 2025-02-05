@@ -58,6 +58,7 @@ CREATE TABLE `web_user` (
   `phone_number` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
   `isParent` int NOT NULL,
+  `salt` varchar(255) NOT NULL,
   PRIMARY KEY (`id_num`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

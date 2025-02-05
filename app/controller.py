@@ -73,7 +73,7 @@ def about():
 def login():
     global registeredAccsAndTimes
     [username,logger] = checkLogin(request.form['username'],request.form['password'])
-    
+    print(logger)
     if logger==2 and username not in timeout: #PARENT LOGIN
         response = make_response(render_template('/parent-dashboard.html'))
         response.set_cookie('un',str(username))
@@ -173,6 +173,10 @@ def childSettings():
 @app.route('/logout')
 def logout():
     return render_template('old-user.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
 @app.errorhandler(404)
 def notFound():

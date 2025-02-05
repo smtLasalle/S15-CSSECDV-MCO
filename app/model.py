@@ -3,7 +3,6 @@ import bcrypt
 import base64
 import re
 
-salt = bcrypt.gensalt(rounds=30,prefix=b'2b')
 
 def getID(inc):
     cursor = db.cursor()
@@ -40,6 +39,7 @@ def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNum
 
 def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber, isParent):
     bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt(rounds=30,prefix=b'2b')
     hashed = bcrypt.kdf(
         password=bytes,
         salt=salt,
@@ -48,8 +48,8 @@ def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNu
     )
     cursor = db.cursor()
     print("pass: " + str(hashed))
-    query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password, isParent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, str(hashed), isParent))
+    query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password, isParent, salt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, str(hashed), isParent, salt))
     db.commit()
 
 def checkPhone(phone):
@@ -71,7 +71,7 @@ def checkLogin(username, password):
     result = cursor.fetchone()
     hashed = bcrypt.kdf(
         password=password.encode('utf-8'),
-        salt=salt,
+        salt=result[8].encode('utf-8'),
         desired_key_bytes=32,
         rounds=178
     )
