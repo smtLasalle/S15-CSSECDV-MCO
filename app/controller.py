@@ -10,7 +10,7 @@ timeout = []
 def start_background_timer(username, rem):
     def timer_function():
         print('Countdown for ' + username + ' started')
-        time.sleep(100)  # Wait for the specified duration
+        time.sleep(20)  # Wait for the specified duration
         print('Countdown for ' + username + ' finished')
         if not stop_event.is_set():
             timerEnd(username,rem)  # Call the callback function
@@ -89,6 +89,7 @@ def login():
         response.set_cookie('iP',str(logger-1))
         timerEnd(username,0)
         return response
+
     
     if not any(pair[0] == username for pair in registeredAccsAndTimes):
         registeredAccsAndTimes.append([username,0])
@@ -177,5 +178,5 @@ def admin():
     return render_template('admin.html')
 
 @app.errorhandler(404)
-def notFound():
+def notFound(e):
     return render_template('404.html')

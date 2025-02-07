@@ -69,13 +69,13 @@ def checkLogin(username, password):
     query = "SELECT * FROM web_user WHERE username = %s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
-    hashed = bcrypt.kdf(
-        password=password.encode('utf-8'),
-        salt=result[8].encode('utf-8'),
-        desired_key_bytes=32,
-        rounds=178
-    )
     if result:
+        hashed = bcrypt.kdf(
+            password=password.encode('utf-8'),
+            salt=result[8].encode('utf-8'),
+            desired_key_bytes=32,
+            rounds=178
+        )
         print(result[6].encode('utf-8'))
         print(password.encode('utf-8'))
         if str(hashed)==str(result[6]):
