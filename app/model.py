@@ -104,23 +104,40 @@ def retrieveData(username):
 
 def saveToDB(array,filename, username):
     cursor = db.cursor()
-    query = "SELECT max(img_id) FROM profile_img"
-    cursor.execute(query)
-    result = cursor.fetchone()
-    if result[0]:
-        max = result[0]+1
-    else:
-        max = 1
-
+    
     query = "SELECT id_num FROM web_user WHERE username=%s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
-
+    
+    if not result:
+        print("User not found. You shouldn't be here")
+        return False
+    
+    user_id = result[0]
+    
+    query = "SELECT * FROM profile_img WHERE user_id = %s"
+    cursor.execute(query, [user_id])
+    result = cursor.fetchone()
+    
     try:
-        query = "INSERT INTO profile_img (img_id, filename, data, user_id) VALUES (%s,%s,%s,%s)"
-        cursor.execute(query,[max,filename,array,result[0]])
+        if result:
+            query = "UPDATE profile_img SET filename = %s, data = %s WHERE user_id = %s"
+            cursor.execute(query, [filename, array, user_id])
+        else:
+            query = "SELECT max(img_id) FROM profile_img"
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if result[0]:
+                max = result[0]+1
+            else:
+                max = 1
+
+            query = "INSERT INTO profile_img (img_id, filename, data, user_id) VALUES (%s,%s,%s,%s)"
+            cursor.execute(query,[max,filename,array,user_id])
+
         db.commit()
     except Exception as e:
-        print("didnt work sad")
+        print("didnt work sad:", e)
         return False
+
     return True

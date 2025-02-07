@@ -21,15 +21,12 @@ def start_background_timer(username, rem):
 
     return stop_event, timer_thread
 
-
 def timerEnd(username,rem):
     global registeredAccsAndTimes
     global timeout
     registeredAccsAndTimes = [pair for pair in registeredAccsAndTimes if pair[0] != username]
     if rem:
         timeout.remove(username)
-
-    
 
 @app.route('/')
 def index():
@@ -104,8 +101,6 @@ def login():
                 timeout.append(username)
                 stop_event, thread = start_background_timer(username,1)
                 
-
-    
     print(registeredAccsAndTimes)
     return render_template('/old-user.html')
 
@@ -172,7 +167,10 @@ def childSettings():
 
 @app.route('/logout')
 def logout():
-    return render_template('old-user.html')
+    response = make_response(render_template('/budget-tracker.html'))
+    for cookie in request.cookies:
+        response.delete_cookie(cookie)
+    return response
 
 @app.route('/admin')
 def admin():
