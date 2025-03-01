@@ -8,7 +8,7 @@
     <link rel="icon" href="../static/image/logo.png">
 
     <!-- External CSS -->
-    <link rel = "stylesheet" href = "../static/settings.css">
+    <link rel="stylesheet" href="../static/settings.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -17,7 +17,7 @@
         <div class="header">
             <img src="../static/image/logo.png" id="logo">
             <div class="header-title">PennyWise</div>
-            <div class="header-subtitle">Kid-Friendly Budget Tracker</div>
+            <div class="header-subtitle">Friendly Budget Tracker</div>
         </div>
 
         <div class="nav-icons">
@@ -106,8 +106,8 @@
 
     <!-- Javascript -->
     <script>
-        const tabBtn = document.querySelectorAll(".tab");
-        const tab = document.querySelectorAll(".info");
+        const tabBtn=document.querySelectorAll(".tab");
+        const tab=document.querySelectorAll(".info");
 
         function tabs(index) {
             tabBtn.forEach(function (button, i) {
@@ -120,9 +120,9 @@
 
             tab.forEach(function (node, i) {
                 if (i === index) {
-                    node.style.display = "block";
+                    node.style.display="block";
                 } else {
-                    node.style.display = "none";
+                    node.style.display="none";
                 }
             });
         }

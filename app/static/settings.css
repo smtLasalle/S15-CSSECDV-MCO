@@ -5,38 +5,38 @@
 
 /*----------------------------- ROOT VARIABLES -----------------------------*/
 :root {
-    --bg: rgb(201, 227, 231);
-    --primary: rgb(128, 198, 230);
     --accent: rgb(170, 217, 230);
-    --popup: white;
-    --shadow: rgba(0, 0, 0, 0.19);
+    --bg: rgb(201, 227, 231);
     --button: skyblue;
+    --popup: white;
+    --primary: rgb(128, 198, 230);
+    --shadow: rgba(0, 0, 0, 0.19);
 }
 
 /*----------------------------- GENERAL STYLES -----------------------------*/
 body {
-    display: grid;
-    grid-template-columns: 100px auto;
-    gap: 20px;
-    height: 100vh;
     background-color: var(--bg);
+    display: grid;
     font-family: "Poppins";
+    gap: 20px;
+    grid-template-columns: 100px auto;
+    height: 100vh;
     margin: 0;
 }
 
 /*----------------------------- NAVIGATION BAR -----------------------------*/
 .nav-bar {
-    position: fixed;
-    left: 8px;
-    top: 10px;
-    width: 100px;
-    height: 95vh;
     background-color: var(--primary);
     border-radius: 30px;
-    text-align: center;
-    overflow: hidden;
-    transition: 0.75s;
     box-shadow: 0 6px 20px 0 var(--shadow);
+    height: 95vh;
+    left: 8px;
+    overflow: hidden;
+    position: fixed;
+    text-align: center;
+    top: 10px;
+    transition: 0.75s;
+    width: 100px;
     z-index: 1000;
 }
 
@@ -47,8 +47,8 @@ body {
 
 .nav-bar:hover .header-title,
 .nav-bar:hover .header-subtitle {
-    visibility: visible;
     transition-delay: 0.5s;
+    visibility: visible;
 }
 
 /*----------------------------- LOGO -----------------------------*/
@@ -58,35 +58,35 @@ body {
 
 #logo {
     display: block;
-    width: 70px;
     height: 70px;
     padding: 10px 0 50px 15px;
+    width: 70px;
 }
 
 .header-title {
     font-family: "Lilita One";
     font-size: 35px;
-    padding-left: 40px;
     margin-top: -110px;
+    padding-left: 40px;
     visibility: hidden;
 }
 
 .header-subtitle {
     font-family: "Roboto";
     font-size: 15px;
-    position: relative;
-    padding: 47px 0 0 25px;
     margin-top: -50px;
-    white-space: nowrap;
+    padding: 47px 0 0 25px;
+    position: relative;
     visibility: hidden;
+    white-space: nowrap;
 }
 
 /*----------------------------- NAVIGATION ICONS -----------------------------*/
 .nav-icons a {
     color: black;
+    font-size: 20px;
     text-align: left;
     text-decoration: none;
-    font-size: 20px;
 }
 
 .nav-icons ion-icon {
@@ -97,9 +97,9 @@ body {
 }
 
 .icon-label {
-    position: relative;
-    left: 100px;
     bottom: 55px;
+    left: 100px;
+    position: relative;
 }
 
 .nav-icons a:hover {
@@ -108,43 +108,46 @@ body {
 
 /*----------------------------- SETTINGS SECTION -----------------------------*/
 .wrapper {
+    box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+    display: flex;
+    left: 50%;
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 600px;
-    display: flex;
-    box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);
 }
 
+/* Left Panel */
 .wrapper .left {
-    width: 30%;
     background: var(--primary);
-    padding: 30px 25px;
-    border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    text-align: center;
+    border-top-left-radius: 5px;
     color: #fff;
+    padding: 30px 25px;
+    text-align: center;
+    width: 30%;
 }
 
 .wrapper .left a {
-    margin-bottom: 10px;
-    text-decoration: none;
     color: #353c4e;
     letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-decoration: none;
 }
 
-.wrapper .left a:hover, .wrapper .left a.active {
+.wrapper .left a:hover,
+.wrapper .left a.active {
     color: var(--shadow);
     transform: scale(1.2);
 }
 
+/* Right Panel */
 .wrapper .right {
-    width: 65%;
     background: #fff;
-    padding: 30px 25px;
-    border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 30px 25px;
+    width: 65%;
 }
 
 .wrapper .right .info {
@@ -152,12 +155,12 @@ body {
 }
 
 .wrapper .right .info h3 {
-    margin-bottom: 15px;
-    padding-bottom: 5px;
     border-bottom: 1px solid #e0e0e0;
     color: #353c4e;
-    text-transform: uppercase;
     letter-spacing: 5px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .wrapper .right .info_data {
@@ -175,23 +178,26 @@ body {
     width: 200px;
 }
 
-.wrapper .right .info_data .data p, .input, label {
+.wrapper .right .info_data .data p,
+.input,
+label {
     border: 0;
-    font-size: 13px;
-    margin-top: 5px;
-    margin-bottom: 10px;
     border-bottom: 1px solid var(--shadow);
     color: #919aa3;
+    font-size: 13px;
+    margin-bottom: 10px;
+    margin-top: 5px;
     width: 140%;
 }
 
+/* Button Styles */
 .btn {
-    border: 0;
     background: var(--bg);
-    padding: 7px 12px;
-    margin-top: 18px;
-    text-transform: uppercase;
+    border: 0;
     box-shadow: 0 2px 4px 0 var(--shadow);
+    margin-top: 18px;
+    padding: 7px 12px;
+    text-transform: uppercase;
 }
 
 .info {

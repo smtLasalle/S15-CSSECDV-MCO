@@ -1,121 +1,127 @@
 @import url('https://fonts.googleapis.com/css?family=Abel:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
     font-family: "Abel", sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+/*----------------------------- BODY -----------------------------*/
 body {
+    align-items: center;
+    background: skyblue;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    background: skyblue;
 }
 
+/*----------------------------- FORM CONTAINER -----------------------------*/
 .rectangle {
-    width: 400px;
-    height: 400px;
     background: whitesmoke;
     border-radius: 20px;
+    height: 400px;
+    width: 400px;
 }
 
 .rectangle h1 {
     font-size: 50px;
+    padding: 10px 0;
     text-align: center;
-    padding: 10px 0 10px 0;
 }
 
+/*----------------------------- INPUT FIELDS -----------------------------*/
 .rectangle .input-box {
-    position: relative;
     background: transparent;
-    margin: 30px 20px;
     border-bottom: 3px solid lightblue;
+    margin: 30px 20px;
+    position: relative;
     width: 350px;
 }
 
 .input-box input {
-    width: 100%;
-    height: 40px;
-    padding: 0 35px;
     background: transparent;
     border: none;
-    outline: none;
     font-size: 20px;
+    height: 40px;
+    outline: none;
+    padding: 0 35px;
+    width: 100%;
 }
 
 .input-box label {
+    color: lightblue;
+    font-size: 20px;
+    left: 35px;
+    pointer-events: none;
     position: absolute;
     top: 50%;
-    left: 35px;
-    color: lightblue;
     transform: translateY(-50%);
-    font-size: 20px;
-    pointer-events: none;
     transition: 0.5s;
 }
 
 .input-box i {
+    color: lightblue;
+    font-size: 20px;
+    left: 5px;
+    pointer-events: none;
     position: absolute;
     top: 50%;
-    left: 5px;
-    color: lightblue;
     transform: translateY(-50%);
-    font-size: 20px;
-    pointer-events: none;
 }
 
 .input-box span::before {
+    background: skyblue;
     content: '';
+    height: 2px;
+    left: 0;
     position: absolute;
     top: 40px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: skyblue;
     transition: 0.5s;
+    width: 100%;
 }
 
 .input-box input:focus ~ label,
 .input-box input:valid ~ label {
-    top: -5px;
     color: skyblue;
+    top: -5px;
 }
 
+/*----------------------------- FORGOT PASSWORD -----------------------------*/
 .forgot {
-    margin: -20px 0 20px 20px;
     color: skyblue;
     cursor: pointer;
     font-size: 18px;
+    margin: -20px 0 20px 20px;
 }
 
 .forgot:hover {
     text-decoration: underline;
 }
 
+/*----------------------------- SUBMIT BUTTON -----------------------------*/
 input[type="submit"] {
-    margin: -5px 0 20px 40px;
-    width: 80%;
-    height: 50px;
-    border: 1px;
     background: lightblue;
+    border: none;
+    cursor: pointer;
     font-size: 25px;
     font-weight: 600;
-    cursor: pointer;
+    height: 50px;
+    margin: -5px 0 20px 40px;
+    width: 80%;
 }
 
 input[type="submit"]:hover {
-   border-color: steelblue;
-   transition: 0.5s;
+    background: steelblue;
+    transition: 0.5s;
 }
 
+/*----------------------------- NEW USER SIGNUP -----------------------------*/
 .new-user {
-    margin: 5px 0px;
-    text-align: center;
-    font-size: 18px;
     color: skyblue;
+    font-size: 18px;
+    margin: 5px 0;
+    text-align: center;
 }
 
 .new-user a {
