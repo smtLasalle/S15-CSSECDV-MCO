@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Child | PennyWise</title>
+    <title>Profile | PennyWise</title>
 
     <link rel="icon" href="../static/image/logo.png">
 
     <!-- External CSS -->
-    <link rel = "stylesheet" href = "../static/child-profile.css">
-    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/profile.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
     <div class="nav-bar">
@@ -22,22 +21,17 @@
         </div>
         
         <div class="nav-icons">
-            <a href="child-profile.html">
+            <a href="profile.html">
                 <ion-icon name="person-outline"></ion-icon>
                 <div class="icon-label">Profile</div>
             </a>
 
-            <a href="child-dashboard.html">
+            <a href="dashboard.html">
                 <ion-icon name="grid-outline"></ion-icon>
                 <div class="icon-label">Dashboard</div>
             </a>
             
-            <a href="child-mail.html">
-                <ion-icon name="mail-outline"></ion-icon>
-                <div class="icon-label">Inbox</div>
-            </a>
-            
-            <a href="child-settings.html">
+            <a href="settings.html">
                 <ion-icon name="settings-outline"></ion-icon>
                 <div class="icon-label">Settings</div>
             </a>
@@ -52,47 +46,15 @@
     <div class="wrapper">
         <div class="left">
             <img src="../static/image/noprofil.jpg" alt="user" width="100" id="preview" height="100" {{defaultHidden}}>
-            <img src="data:image/jpeg;base64,{{image}}" alt="User Profile"  id="preview" width="100" height="100" {{profHidden}}>
+            <img src="data:image/jpeg;base64,{{image}}" alt="User Profile" id="preview" width="100" height="100" {{profHidden}}>
             <form action="/saveProfile" method="post" enctype="multipart/form-data">
-            <div class = "round">
-                
-                <input type = "file" id="file" name="file" onchange="return fileValidation()">
-                <i class = "fa fa-camera" style = "color: #fff"></i>
-                
-                
-
-            </div>
-            <script>
-                function fileValidation()
-                {
-                    var input = document.getElementById("file");
-                    var path = input.value;
-                    var allowed =  /(\.jpg|\.jpeg|\.png)$/i;
-                    if(!allowed.exec(path))
-                    {
-                        console.log("Is not allowed");
-                        alert("Invalid file type!");
-                        input.value = "";
-                        return false;
-                    }
-                    else
-                    {
-                        console.log("Is allowed");
-                        if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            document.getElementById('preview').src = e.target.result;
-                            console.log(document.getElementById('preview').src);
-                        };
-                        
-                        reader.readAsDataURL(input.files[0]);
-                        }
-                    }
-                }
-            </script>
-            <h4>Name of Child</h4>
-            <p>...</p>
-            <input type="submit" value="Save Edits">
+                <div class="round">
+                    <input type="file" id="file" name="file" onchange="return fileValidation()">
+                    <i class="fa fa-camera" style="color: #fff"></i>
+                </div>
+                <h4>Name of Child</h4>
+                <p>...</p>
+                <input type="submit" value="Save Edits">
             </form>
         </div>
         <div class="right">

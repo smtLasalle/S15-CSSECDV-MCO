@@ -1,7 +1,10 @@
+/*----------------------------- IMPORT FONTS -----------------------------*/
 @import url('https://fonts.googleapis.com/css?family=Lilita One:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
 
+/*----------------------------- ROOT VARIABLES -----------------------------*/
 :root {
     --bg: rgb(201, 227, 231);
     --primary: rgb(128, 198, 230);
@@ -11,6 +14,7 @@
     --button: skyblue;
 }
 
+/*----------------------------- GENERAL STYLES -----------------------------*/
 body {
     display: grid;
     grid-template-columns: 100px auto;
@@ -18,20 +22,46 @@ body {
     height: 100vh;
     background-color: var(--bg);
     font-family: "Poppins";
-    margin: 0;  
+    margin: 0;
 }
-/*-------------------------LOGO-----------------------------*/
+
+/*----------------------------- NAVIGATION BAR -----------------------------*/
+.nav-bar {
+    position: fixed;
+    left: 8px;
+    top: 10px;
+    width: 100px;
+    height: 95vh;
+    background-color: var(--primary);
+    border-radius: 30px;
+    text-align: center;
+    overflow: hidden;
+    transition: 0.75s;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+    z-index: 1000;
+}
+
+.nav-bar:hover {
+    width: 300px;
+    z-index: 1000;
+}
+
+.nav-bar:hover .header-title,
+.nav-bar:hover .header-subtitle {
+    visibility: visible;
+    transition-delay: 0.5s;
+}
+
+/*----------------------------- LOGO -----------------------------*/
 .header {
     padding-bottom: 50px;
 }
 
 #logo {
+    display: block;
     width: 70px;
     height: 70px;
-    padding-top: 10px;
-    padding-bottom: 50px;
-    padding-left: 15px;
-    display: block;
+    padding: 10px 0 50px 15px;
 }
 
 .header-title {
@@ -45,46 +75,14 @@ body {
 .header-subtitle {
     font-family: "Roboto";
     font-size: 15px;
-    padding-top: 47px;
-    padding-left: 25px;
     position: relative;
+    padding: 47px 0 0 25px;
     margin-top: -50px;
     white-space: nowrap;
     visibility: hidden;
 }
-/*-------------------------LOGO-----------------------------*/
 
-/*---------------------SIDE NAVIGATION BAR-------------------------------*/
-.nav-bar {
-    background-color: var(--primary);
-    border-radius: 30px;
-    text-align: center;
-    overflow: hidden;
-    width: 100px;
-    height: 110vh;
-    transition: .75s;
-    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    margin-left: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    z-index: 2;
-}
-
-.nav-bar:hover {
-    width: 300px;
-    z-index: 2;
-}
-
-.nav-bar:hover .header-subtitle {
-    transition-delay: 0.5s;
-    visibility: visible;
-} 
-
-.nav-bar:hover .header-title {
-    transition-delay: 0.5s;
-    visibility: visible;
-}
-
+/*----------------------------- NAVIGATION ICONS -----------------------------*/
 .nav-icons a {
     color: black;
     text-align: left;
@@ -92,11 +90,11 @@ body {
     font-size: 20px;
 }
 
-.nav-icons ion-icon{
+.nav-icons ion-icon {
+    display: block;
     font-size: 40px;
     padding-bottom: 20px;
     padding-left: 30px;
-    display: block;
 }
 
 .icon-label {
@@ -109,19 +107,19 @@ body {
     color: white;
 }
 
-/*------------------------SETTINGS------------------------*/
+/*----------------------------- PROFILE SECTION -----------------------------*/
 .wrapper {
     position: absolute;
-    top: 55%;
-    left: 55%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%,-50%);
-    width: 600px;
+    width: 450px;
     display: flex;
     box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);
 }
 
 .wrapper .left {
-    width: 30%;
+    width: 35%;
     background: var(--primary);
     padding: 30px 25px;
     border-top-left-radius: 5px;
@@ -130,20 +128,41 @@ body {
     color: #fff;
 }
 
-.wrapper .left a {
+.wrapper .left img {
+    border: 6px solid #eaeaea;
+    border-radius: 50%;
     margin-bottom: 10px;
-    text-decoration: none;
-    color: #353c4e;
-    letter-spacing: 2px;
 }
 
-.wrapper .left a:hover {
-    color: var(--shadow);
-    transform: scale(1.2);
+.wrapper .left .round {
+    position: absolute;
+    top: 120px;
+    left: 100px;
+    background: #353c4e;
+    width: 32px;
+    height: 32px;
+    line-height: 33px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
-.wrapper .left a.active {
-    color: var(--shadow);
+.wrapper .left input[type="file"] {
+    position: absolute;
+    transform: scale(2);
+    opacity: 0;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
+}
+
+.wrapper .left h4 {
+    margin-bottom: 10px;
+}
+
+.wrapper .left p {
+    font-size: 12px;
 }
 
 .wrapper .right {
@@ -182,25 +201,9 @@ body {
     width: 200px;
 }
 
-.wrapper .right .info_data .data p, .input, label {
-    border: 0;
+.wrapper .right .info_data .data p {
     font-size: 13px;
     margin-top: 5px;
     margin-bottom: 10px;
-    border-bottom: 1px solid var(--shadow);
     color: #919aa3;
-    width: 140%;
-}
-
-.btn {
-    border: 0;
-    background: var(--bg);
-    padding: 7px 12px;
-    margin-top: 18px;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-}
-
-.info {
-    display: none;
 }

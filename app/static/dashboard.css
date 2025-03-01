@@ -1,0 +1,357 @@
+/*----------------------------- IMPORT FONTS -----------------------------*/
+@import url('https://fonts.googleapis.com/css?family=Lilita One:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/*----------------------------- ROOT VARIABLES -----------------------------*/
+:root {
+    --bg: rgb(201, 227, 231);
+    --primary: rgb(128, 198, 230);
+    --accent: rgb(170, 217, 230);
+    --popup: white;
+    --shadow: rgba(0, 0, 0, 0.19);
+    --button: skyblue;
+}
+
+/*----------------------------- GENERAL STYLES -----------------------------*/
+body {
+    display: grid;
+    grid-template-columns: 100px auto;
+    gap: 20px;
+    height: 100vh;
+    margin: 0;
+    background-color: var(--bg);
+    font-family: "Poppins";
+}
+
+/*----------------------------- NAVIGATION BAR -----------------------------*/
+.nav-bar {
+    position: fixed;
+    left: 8px;
+    top: 10px;
+    width: 100px;
+    height: 95vh;
+    background-color: var(--primary);
+    border-radius: 30px;
+    text-align: center;
+    overflow: hidden;
+    transition: 0.75s;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 1000;
+}
+
+.nav-bar:hover {
+    width: 300px;
+    z-index: 1000;
+}
+
+.nav-bar:hover .header-title,
+.nav-bar:hover .header-subtitle {
+    visibility: visible;
+    transition-delay: 0.5s;
+}
+
+/*----------------------------- LOGO -----------------------------*/
+.header {
+    padding-bottom: 50px;
+}
+
+#logo {
+    display: block;
+    width: 70px;
+    height: 70px;
+    padding: 10px 0 50px 15px;
+}
+
+.header-title {
+    font-family: "Lilita One";
+    font-size: 35px;
+    padding-left: 40px;
+    margin-top: -110px;
+    visibility: hidden;
+}
+
+.header-subtitle {
+    font-family: "Roboto";
+    font-size: 15px;
+    position: relative;
+    padding: 47px 0 0 25px;
+    margin-top: -50px;
+    white-space: nowrap;
+    visibility: hidden;
+}
+
+/*----------------------------- NAVIGATION ICONS -----------------------------*/
+.nav-icons a {
+    color: black;
+    text-align: left;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.nav-icons ion-icon {
+    display: block;
+    font-size: 40px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+}
+
+.icon-label {
+    position: relative;
+    left: 100px;
+    bottom: 55px;
+}
+
+.nav-icons a:hover,
+.add-member:hover,
+#set-balance ion-icon:hover,
+#expenses ion-icon:hover,
+#goals ion-icon:hover {
+    color: white;
+}
+
+/*----------------------------- MAIN PAGE -----------------------------*/
+.main-page {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+    margin-left: 120px;
+}
+
+/*----------------------------- DASHBOARD -----------------------------*/
+.dashboard {
+    grid-row: 1/7;
+    font-size: 50px;
+    padding-top: 10px;
+}
+
+.dashboard .dashboard-content {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/*----------------------------- BALANCE -----------------------------*/
+#balance {
+    grid-row: 1/1;
+    padding: 10px 0px 5px 20px;
+    background-color: var(--primary);
+    border-radius: 30px;
+    height: 100px;
+    text-align: left;
+    margin-left: 10px;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+}
+
+.balance-content {
+    width: 450px;
+    font-size: 33px;
+}
+
+#currency {
+    float: left;
+    padding-left: 40px;
+    padding-top: 10px;
+}
+
+#amount {
+    float: right;
+    padding-right: 70px;
+    padding-top: 10px;
+}
+
+/*----------------------------- EXPENSES -----------------------------*/
+#expenses {
+    grid-row: 1/3;
+    width: 480px;
+    height: auto;
+    background-color: var(--accent);
+    border-radius: 30px;
+    text-align: left;
+    padding: 10px 0px 5px 20px;
+    margin-left: 10px;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+}
+
+#expenses-content {
+    padding-right: 20px;
+}
+
+.expenses-table {
+    font-size: 14px;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: none;
+}
+
+/*----------------------------- GOALS -----------------------------*/
+#goals {
+    position: absolute;
+    top: 270px;
+    width: 450px;
+    height: auto;
+    background-color: var(--accent);
+    border-radius: 30px;
+    text-align: left;
+    padding: 10px 0px 5px 20px;
+    margin-left: 10px;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+}
+
+#goals-content {
+    padding-right: 20px;
+}
+
+.goals-table {
+    width: 100%;
+    padding-right: 20px;
+    border-collapse: collapse;
+}
+
+.goals-table td {
+    font-size: 14px;
+    padding: 5px;
+    border: none;
+}
+
+.goal-name {
+    text-align: left;
+}
+
+.goal-unit,
+.goal-price {
+    text-align: right;
+    margin-right: 10px;
+}
+
+.goals-table tr:hover {
+    background: var(--primary);
+    border: none;
+}
+
+/*----------------------------- BUTTON STYLES (Uniform) -----------------------------*/
+.set-balance,
+.add-expense,
+.add-goals {
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    float: right;
+    margin-right: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/*----------------------------- FOR APPROVAL & HISTORY -----------------------------*/
+.for-approval {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    font-size: 20px;
+    padding-top: 20px;
+}
+
+.history {
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    font-size: 20px;
+    padding-top: 30px;
+}
+
+.for-approval hr,
+.history hr {
+    height: 2px;
+    background-color: darkgray;
+    border-color: darkgray;
+    width: 280px;
+}
+
+/*----------------------------- FORM STYLES -----------------------------*/
+#balance-form {
+    display: none;
+    z-index: 9;
+    width: 350px;
+    height: 130px;
+    background-color: var(--popup);
+    text-align: center;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    position: relative;
+}
+
+#expenses-form {
+    display: none;
+    z-index: 4;
+    width: 350px;
+    height: 185px;
+    background-color: var(--popup);
+    text-align: left;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+}
+
+#goals-form {
+    display: none;
+    z-index: 4;
+    width: 350px;
+    height: 185px;
+    background-color: var(--popup);
+    text-align: left;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+    z-index: 1;
+}
+
+#balance-form hr, #expenses-form hr, #goals-form hr {
+    border-color: skyblue;
+    height: 0;
+    width: 320px;
+}
+
+.form-title {
+    text-align: center;
+}
+
+#target-price, #goal-item, #amt-input, #amount-input, #expenses-item, #expenses-date {
+    font-size: 18px;
+    border-radius: 30px;
+}
+
+#target-price::placeholder, #goal-item::placeholder, #amt-input::placeholder, #amount-input::placeholder, #expenses-item::placeholder {
+    padding-left: 5px;
+}
+
+#goals-form button, #balance-form button, #expenses-form button {
+    width: 200px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 30px;
+    background-color: var(--button);
+    border: none;
+    font-weight: 600;
+    font-family: "Poppins";
+    margin-top: 5px;
+}
+
+#expenses-form button {
+    margin-left: 80px;
+}
+
+#goals-form button {
+    margin-left: 70px;
+    margin-top: 20px;
+}

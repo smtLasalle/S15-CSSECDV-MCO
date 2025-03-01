@@ -1,7 +1,9 @@
+/*----------------------------- IMPORT FONTS -----------------------------*/
 @import url('https://fonts.googleapis.com/css?family=Lilita One:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
+/*----------------------------- ROOT VARIABLES -----------------------------*/
 :root {
     --bg: rgb(201, 227, 231);
     --primary: rgb(128, 198, 230);
@@ -11,6 +13,7 @@
     --button: skyblue;
 }
 
+/*----------------------------- GENERAL STYLES -----------------------------*/
 body {
     display: grid;
     grid-template-columns: 100px auto;
@@ -18,20 +21,46 @@ body {
     height: 100vh;
     background-color: var(--bg);
     font-family: "Poppins";
-    margin: 0;  
+    margin: 0;
 }
-/*-------------------------LOGO-----------------------------*/
+
+/*----------------------------- NAVIGATION BAR -----------------------------*/
+.nav-bar {
+    position: fixed;
+    left: 8px;
+    top: 10px;
+    width: 100px;
+    height: 95vh;
+    background-color: var(--primary);
+    border-radius: 30px;
+    text-align: center;
+    overflow: hidden;
+    transition: 0.75s;
+    box-shadow: 0 6px 20px 0 var(--shadow);
+    z-index: 1000;
+}
+
+.nav-bar:hover {
+    width: 300px;
+    z-index: 1000;
+}
+
+.nav-bar:hover .header-title,
+.nav-bar:hover .header-subtitle {
+    visibility: visible;
+    transition-delay: 0.5s;
+}
+
+/*----------------------------- LOGO -----------------------------*/
 .header {
     padding-bottom: 50px;
 }
 
 #logo {
+    display: block;
     width: 70px;
     height: 70px;
-    padding-top: 10px;
-    padding-bottom: 50px;
-    padding-left: 15px;
-    display: block;
+    padding: 10px 0 50px 15px;
 }
 
 .header-title {
@@ -45,46 +74,14 @@ body {
 .header-subtitle {
     font-family: "Roboto";
     font-size: 15px;
-    padding-top: 47px;
-    padding-left: 25px;
     position: relative;
+    padding: 47px 0 0 25px;
     margin-top: -50px;
     white-space: nowrap;
     visibility: hidden;
 }
-/*-------------------------LOGO-----------------------------*/
 
-/*---------------------SIDE NAVIGATION BAR-------------------------------*/
-.nav-bar {
-    background-color: var(--primary);
-    border-radius: 30px;
-    text-align: center;
-    overflow: hidden;
-    width: 100px;
-    height: 110vh;
-    transition: .75s;
-    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    margin-left: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    z-index: 2;
-}
-
-.nav-bar:hover {
-    width: 300px;
-    z-index: 2;
-}
-
-.nav-bar:hover .header-subtitle {
-    transition-delay: 0.5s;
-    visibility: visible;
-} 
-
-.nav-bar:hover .header-title {
-    transition-delay: 0.5s;
-    visibility: visible;
-}
-
+/*----------------------------- NAVIGATION ICONS -----------------------------*/
 .nav-icons a {
     color: black;
     text-align: left;
@@ -92,11 +89,11 @@ body {
     font-size: 20px;
 }
 
-.nav-icons ion-icon{
+.nav-icons ion-icon {
+    display: block;
     font-size: 40px;
     padding-bottom: 20px;
     padding-left: 30px;
-    display: block;
 }
 
 .icon-label {
@@ -109,11 +106,11 @@ body {
     color: white;
 }
 
-/*------------------------SETTINGS------------------------*/
+/*----------------------------- SETTINGS SECTION -----------------------------*/
 .wrapper {
     position: absolute;
-    top: 55%;
-    left: 55%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%,-50%);
     width: 600px;
     display: flex;
@@ -137,13 +134,9 @@ body {
     letter-spacing: 2px;
 }
 
-.wrapper .left a:hover {
+.wrapper .left a:hover, .wrapper .left a.active {
     color: var(--shadow);
     transform: scale(1.2);
-}
-
-.wrapper .left a.active {
-    color: var(--shadow);
 }
 
 .wrapper .right {
@@ -198,7 +191,7 @@ body {
     padding: 7px 12px;
     margin-top: 18px;
     text-transform: uppercase;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px 0 var(--shadow);
 }
 
 .info {
