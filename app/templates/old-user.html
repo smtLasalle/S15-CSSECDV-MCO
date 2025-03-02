@@ -21,6 +21,9 @@
     <div class="rectangle">
         <form action="/login" method="post" >
             <h1>LOG IN</h1>
+            <h4 style="color:red; text-align:center; {{ 'display:block;' if loginFail == True else 'display:none;' }}">
+                Invalid username or password
+            </h4>
             <div class="input-box">
                 <input type="text" name="username" value={{username}}>
                 <span></span>
@@ -38,9 +41,7 @@
                 Forgot Password?
             </div>
 
-            <a href="/login">
-                <input type="submit" value="LOG IN">
-            </a>
+            <input type="submit" value="LOG IN">
 
             <div class="new-user">
                 New User? <a href="new-user.html">Sign-up</a>

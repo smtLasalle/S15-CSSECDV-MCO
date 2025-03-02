@@ -1,22 +1,39 @@
 TODO:
-1. Password Hashing
-2. Anti Redundancy of new signups
-3. Prof pic
-4. Anti brute force
-5. Email validation (front and back)
-6. Phone number validation (front and back)
-7. File upload type detection
-8. Login
+1.  Profile file upload type detection
+2.  IP based anti brute force
+3.  User session handling
+4.  Log file
+5.  User features
+6.  Admin features
+7.  Error messaging
+8.  HTTPS
+9.  DB expansion
+10. Password thing
+
+Optionals
+1. Settings feature
+2. Further backend optimization
+3. Frontend streamlining
+
+Notes (respective numbers with todo list):
+1.  Check if actually img file (sir said something about this)
+    Preview stopped working, might fix
+3.  Implementation of session timeout
+4.  Logging features for authentication, transactions, and administrative actions.
+5.  AT LEAST 2 diffent kinds of actions. (ie. post and edit). More features + more bonus!
+    Application should have a feature to save and display text input. At least 2 numeric input
+6.  AT LEAST 2 diffent kinds of admin-only actions. More features + more bonus!
+7.  Error messaging. Detailed with stack trace when debug enabled. Generic error message when debug is turned off.
+8.  Self-signed certificate is acceptable
+9.  Implement db for user features
+10. At least 8 chars
 
 In progress:
-(2) Anti Redundancy - Finished - Improvable*        
-(5) Email validation (front and back) - Finished - Improvable**
-(6) Phone Validation (front and back) - Finished - Improvable**
-(8) Login and Logout - Finished
-(1) Password Hashing - Finished
-(4) Anti-Brute Force - Finished
-(7) Upload file type validation - Finished
-(3) Prof pic - need preview and save to db - Finished
+DB expansion
+User features
 
-*Isolation between username or email redundancy without reloading the page is ideal
-**I feel like theres something to improve but i cant figure it out
+USERS IN DB
+zyn         | password
+bananaman   | banana
+A2-ard      | password
+admin       | password

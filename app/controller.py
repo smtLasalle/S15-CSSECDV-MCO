@@ -44,15 +44,16 @@ def submit():
     phoneNumber = request.form['phoneNumber']
     password = request.form['password']
     confirmPass = request.form['confirmPassword']
-    isParent = request.form['accountType']
 
     #insert CHECK FOR REDUNDANCY
-    if newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNumber):
-        insertNewUser(idnum,username,firstName,lastName, email, password, phoneNumber, isParent)
-        return render_template('old-user.html')
+    flag = newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNumber)
+    
+    if flag == 1:
+        insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber)
+        return render_template('old-user.html', username=username)
     
     return render_template('/new-user.html',email=email, firstName=firstName, lastName=lastName,
-                           phoneNumber=phoneNumber,username=username)
+                           phoneNumber=phoneNumber,username=username, flag = flag)
 
 @app.route('/old-user.html')
 def loginPage():
@@ -69,28 +70,21 @@ def about():
 @app.route('/login', methods=['POST'])
 def login():
     global registeredAccsAndTimes
-    [username,logger] = checkLogin(request.form['username'],request.form['password'])
-    print(logger)
-    if logger==2 and username not in timeout: #PARENT LOGIN
-        response = make_response(render_template('/parent-dashboard.html'))
+    [username,isAdmin] = checkLogin(request.form['username'],request.form['password'])
+    print(isAdmin)
+    if isAdmin == 0 and username not in timeout: # USER LOGIN
+        response = make_response(render_template('/dashboard.html'))
         response.set_cookie('un',str(username))
-        response.set_cookie('iP',str(logger-1))
+        response.set_cookie('iA',str(isAdmin))
         timerEnd(username,0)
         return response
-    elif logger==1 and username not in timeout: #CHILD LOGIN
-        response = make_response(render_template('/child-dashboard.html'))
+    elif isAdmin >= 1 and username not in timeout: # ADMIN LOGIN
+        response = make_response(render_template('/chief.html'))
         response.set_cookie('un',str(username))
-        response.set_cookie('iP',str(logger-1))
-        timerEnd(username,0)
-        return response
-    elif logger==-1 and username not in timeout: # ADMIN LOGIN
-        response = make_response(render_template('/admin.html'))
-        response.set_cookie('un',str(username))
-        response.set_cookie('iP',str(logger-1))
+        response.set_cookie('iA',str(isAdmin))
         timerEnd(username,0)
         return response
 
-    
     if not any(pair[0] == username for pair in registeredAccsAndTimes):
         registeredAccsAndTimes.append([username,0])
 
@@ -103,7 +97,7 @@ def login():
                 stop_event, thread = start_background_timer(username,1)
                 
     print(registeredAccsAndTimes)
-    return render_template('/old-user.html')
+    return render_template('old-user.html', loginFail=True, username=username)
 
 @app.route('/saveProfile', methods=['POST'])
 def saveProfile():
@@ -112,48 +106,33 @@ def saveProfile():
     filename = picture.filename
     bytePicture = picture.read()
     username = request.cookies.get('un')
-    isParent = request.cookies.get('iP')
-    if isParent=='1':
-        if saveToDB(bytePicture, filename, username): # PARENT PROFPIC CHANGES
-            return render_template('parent-dashboard.html')
-        return render_template('parent-profile.html')
-    elif isParent=='0':
-        if saveToDB(bytePicture, filename, username): # CHILD PROFPIC CHANGES
-            return render_template('child-dashboard.html')
-        return render_template('child-profile.html')
+    isAdmin = request.cookies.get('iA')
+    if isAdmin=='0':
+        if saveToDB(bytePicture, username): # USER PROFPIC CHANGES
+            return render_template('dashboard.html')
+        return render_template('profile.html')
     else:
-        if saveToDB(bytePicture, filename, username): # ADMIN PROFPIC CHANGES
-            return render_template('admin.html')
-        return render_template('admin.html')
+        if saveToDB(bytePicture, username): # ADMIN PROFPIC CHANGES
+            return render_template('chief.html')
+        return render_template('chief.html')
 
-@app.route('/parent-dashboard.html')
+@app.route('/dashboard.html')
 def parentDashboard():
-    return render_template('parent-dashboard.html')
+    return render_template('dashboard.html')
 
-@app.route('/parent-mail.html')
-def parentMail():
-    return render_template('parent-mail.html')
-
-@app.route('/parent-profile.html')
-def parentProfile():
+@app.route('/profile.html')
+def profile():
     name=request.cookies.get('un')
     [user,email,data] = retrieveData(name)
     if data==0:
-        return render_template('parent-profile.html',username=user,email=email,image=data, defaultHidden="", profHidden="hidden")
-    return render_template('parent-profile.html',username=user,email=email,image=data, defaultHidden="hidden", profHidden="")
+        return render_template('profile.html',username=user,email=email,image=data, defaultHidden="", profHidden="hidden")
+    return render_template('profile.html',username=user,email=email,image=data, defaultHidden="hidden", profHidden="")
 
-@app.route('/parent-settings.html')
-def parentSettings():
-    return render_template('parent-settings.html')
+@app.route('/settings.html')
+def settings():
+    return render_template('settings.html')
 
-@app.route('/child-dashboard.html')
-def childDashboard():
-    return render_template('child-dashboard.html')
-
-@app.route('/child-mail.html')
-def childMail():
-    return render_template('child-mail.html')
-
+'''
 @app.route('/child-profile.html')
 def childProfile():
     name=request.cookies.get('un')
@@ -161,10 +140,7 @@ def childProfile():
     if data==0:
         return render_template('child-profile.html',username=user,email=email,image=data, defaultHidden="", profHidden="hidden")
     return render_template('child-profile.html',username=user,email=email, image=data, defaultHidden="hidden", profHidden="")
-
-@app.route('/child-settings.html')
-def childSettings():
-    return render_template('child-settings.html')
+'''
 
 @app.route('/logout')
 def logout():
@@ -173,9 +149,9 @@ def logout():
         response.delete_cookie(cookie)
     return response
 
-@app.route('/admin')
+@app.route('/chief')
 def admin():
-    return render_template('admin.html')
+    return render_template('chief.html')
 
 @app.errorhandler(404)
 def notFound(e):

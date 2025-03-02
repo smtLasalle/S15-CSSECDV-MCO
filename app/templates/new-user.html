@@ -38,6 +38,18 @@
     <div class="rectangle">
         <form action="/submitRegister" method="post">
             <h1>SIGN UP</h1>
+            <h4 style="color:red; text-align:center; {{ 'display:block;' if flag == 0 else 'display:none;' }}">
+                Passwords don't match!
+            </h4>
+            <h4 style="color:red; text-align:center; {{ 'display:block;' if flag == -1 else 'display:none;' }}">
+                Username in use!
+            </h4>
+            <h4 style="color:red; text-align:center; {{ 'display:block;' if flag == -2 else 'display:none;' }}">
+                Email in use!
+            </h4>
+            <h4 style="color:red; text-align:center; {{ 'display:block;' if flag == -3 else 'display:none;' }}">
+                Phone number in use!
+            </h4>
         <div class="user-details">
             <div class="input-box">
                 <input text="text"  name="firstName" required value={{firstName}}>

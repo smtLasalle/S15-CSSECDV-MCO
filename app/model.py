@@ -7,9 +7,8 @@ import re
 def getID(inc):
     cursor = db.cursor()
     print(cursor)
-    query = "SELECT MAX(id_num) FROM web_user"
     try:
-        cursor.execute("SELECT MAX(id_num) FROM web_user")
+        cursor.execute("SELECT MAX(user_id) FROM web_user")
         print(cursor)
     except Exception as e:
         print("error somewhere", e)
@@ -23,21 +22,27 @@ def getID(inc):
     return result[0]
 
 def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNumber):
-    #check if all fields have some text
-    flag = 0
-    if (password==confirmPass and bool(username) and checkEmail 
-        and bool(firstName) and bool(lastName) and checkPhone):
-        flag = 1
-    
-    cursor = db.cursor()
-    query = "SELECT * FROM web_user WHERE username = %s OR email = %s OR phone_number=%s"
-    cursor.execute(query,(username,email,phoneNumber))
+    flag = 0 # If passwords don't match
+    if (password == confirmPass and bool(username) and checkEmail(email) 
+        and bool(firstName) and bool(lastName) and checkPhone(phoneNumber)):
+        flag = 1  # If new user
+
+    cursor = db.cursor(buffered=True)
+    query = "SELECT username, email, phone_number FROM web_user WHERE username = %s OR email = %s OR phone_number = %s"
+    cursor.execute(query, (username, email, phoneNumber))
     result = cursor.fetchone()
+
     if result:
-        return 0
+        if result[0] == username:
+            return -1  # Username exists
+        elif result[1] == email:
+            return -2  # Email exists
+        elif result[2] == phoneNumber:
+            return -3  # Phone number exists
+    
     return flag
 
-def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber, isParent):
+def insertNewUser(userid, username, firstName, lastName, email, password, phoneNumber):
     bytes = password.encode('utf-8')
     salt = bcrypt.gensalt(rounds=30,prefix=b'2b')
     hashed = bcrypt.kdf(
@@ -47,9 +52,11 @@ def insertNewUser(idnum, username, firstName, lastName, email, password, phoneNu
         rounds=178
     )
     cursor = db.cursor()
+    profImg = None
+    isAdmin = 0
     print("pass: " + str(hashed))
-    query = "INSERT INTO web_user (id_num, username, first_name, last_name, email, phone_number, password, isParent, salt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(query, (idnum, username, firstName, lastName, email, phoneNumber, str(hashed), isParent, salt))
+    query = "INSERT INTO web_user (user_id, username, isAdmin, prof_img, first_name, last_name, email, phone_number, password, salt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(query, (userid, username, isAdmin, profImg, firstName, lastName, email, phoneNumber, str(hashed), salt))
     db.commit()
 
 def checkPhone(phone):
@@ -72,20 +79,16 @@ def checkLogin(username, password):
     if result:
         hashed = bcrypt.kdf(
             password=password.encode('utf-8'),
-            salt=result[8].encode('utf-8'),
+            salt=result[9].encode('utf-8'),
             desired_key_bytes=32,
             rounds=178
         )
-        print(result[6].encode('utf-8'))
+        print(result[8].encode('utf-8'))
         print(password.encode('utf-8'))
-        if str(hashed)==str(result[6]):
-            if result[7]==1:
-                return [username,2]
-            elif result[7]==0:
-                return [username,1]
-            elif result[7]==-1:
-                return [username,-1]
-    return [username,0]
+        if str(hashed)==str(result[8]):
+            return [username,result[2]]
+        
+    return [username,-1] # invalid login
 
 def retrieveData(username):
     print("retrieve: "+ username)
@@ -93,19 +96,18 @@ def retrieveData(username):
     query = "SELECT * FROM web_user WHERE username = %s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
-    query = "SELECT * FROM profile_img WHERE user_id=%s"
-    cursor.execute(query,[result[0]])
-    result2 = cursor.fetchone()
-    image = 0
-    if result2:
+    if result[3]:
         print("image found")
-        image = base64.b64encode(result2[2]).decode('utf-8')
-    return result[1],result[4], image
+        image = base64.b64encode(result[3]).decode('utf-8')
+    else:
+        image = 0
+        
+    return result[1],result[6], image
 
-def saveToDB(array,filename, username):
+def saveToDB(data, username):
     cursor = db.cursor()
     
-    query = "SELECT id_num FROM web_user WHERE username=%s"
+    query = "SELECT user_id FROM web_user WHERE username=%s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
     
@@ -115,15 +117,18 @@ def saveToDB(array,filename, username):
     
     user_id = result[0]
     
+    '''
     query = "SELECT * FROM profile_img WHERE user_id = %s"
     cursor.execute(query, [user_id])
     result = cursor.fetchone()
+    '''
     
     try:
         if result:
-            query = "UPDATE profile_img SET filename = %s, data = %s WHERE user_id = %s"
-            cursor.execute(query, [filename, array, user_id])
+            query = "UPDATE web_user SET prof_img = %s WHERE user_id = %s"
+            cursor.execute(query, [data, user_id])
         else:
+            '''
             query = "SELECT max(img_id) FROM profile_img"
             cursor.execute(query)
             result = cursor.fetchone()
@@ -133,8 +138,9 @@ def saveToDB(array,filename, username):
                 max = 1
 
             query = "INSERT INTO profile_img (img_id, filename, data, user_id) VALUES (%s,%s,%s,%s)"
-            cursor.execute(query,[max,filename,array,user_id])
-
+            cursor.execute(query,[max,data,user_id])
+            '''
+            
         db.commit()
     except Exception as e:
         print("didnt work sad:", e)
