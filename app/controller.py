@@ -6,23 +6,26 @@ import threading
 import os
 from datetime import datetime, timedelta
 
-TIMEOUT_DURATION = timedelta(seconds=20) # Session timeout time
+TIMEOUT_DURATION = timedelta(seconds=3) # Session timeout time
+MAX_LOGIN_ATTEMPTS = 5  # Maximum failed login attempts before timeout
+LOCKOUT_DURATION = 20  # Lockout duration in seconds
 
 # Session settings
 app.config['SECRET_KEY'] = os.urandom(12)  # Secure random key
 app.config['PERMANENT_SESSION_LIFETIME'] = TIMEOUT_DURATION # Session timeout
 app.config['SESSION_TYPE'] = 'filesystem'
 
-registeredAccsAndTimes = []
-timeout = []
+# Track IP addresses instead of usernames
+ip_attempt_tracker = []  # List of [ip_address, attempt_count] pairs
+ip_timeout_list = []     # List of IP addresses that are currently timed out
 
-def start_background_timer(username, rem):
+def start_background_timer(ip_address, rem):
     def timer_function():
-        print('Countdown for ' + username + ' started')
-        time.sleep(20)  # Wait for the specified duration
-        print('Countdown for ' + username + ' finished')
+        print(f'Countdown for IP {ip_address} started')
+        time.sleep(LOCKOUT_DURATION)  # Wait for the specified duration
+        print(f'Countdown for IP {ip_address} finished')
         if not stop_event.is_set():
-            timerEnd(username,rem)  # Call the callback function
+            timer_end(ip_address, rem)  # Call the callback function
     stop_event = threading.Event()
 
     timer_thread = threading.Thread(target=timer_function)
@@ -30,12 +33,12 @@ def start_background_timer(username, rem):
 
     return stop_event, timer_thread
 
-def timerEnd(username,rem):
-    global registeredAccsAndTimes
-    global timeout
-    registeredAccsAndTimes = [pair for pair in registeredAccsAndTimes if pair[0] != username]
+def timer_end(ip_address, rem):
+    global ip_attempt_tracker
+    global ip_timeout_list
+    ip_attempt_tracker = [pair for pair in ip_attempt_tracker if pair[0] != ip_address]
     if rem:
-        timeout.remove(username)
+        ip_timeout_list.remove(ip_address)
 
 @app.before_request
 def check_session_timeout():
@@ -46,10 +49,19 @@ def check_session_timeout():
         if last_activity_str:
             last_activity = datetime.strptime(last_activity_str, '%Y-%m-%d %H:%M:%S')
             # Check if session has expired
-            if datetime.now() - last_activity > TIMEOUT_DURATION:
-                session.clear()
-                return render_template('old-user.html', error_message = "Invalid username or password!")
-                return render_template('old-user.html', error_message = "Session Timeout, Please Log in again")
+            print(f"\n{session.items}\n")
+            print(f"endpoint:   {request.endpoint}")
+            print(f"lastact:    {last_activity}")
+            print(f"datenow:    {datetime.now()}")
+            print(f"diff:       {datetime.now() - last_activity}")
+            if (datetime.now() - last_activity > TIMEOUT_DURATION):
+                print("session timeout detected??")
+                x = 0
+                #while(x < 1000000000):
+                #    x+=1
+                #session.clear()
+                print("session timeout detected!")
+                return render_template('about.html', error_message = "Session Timeout, Please Log in again")
             else:
                 # Update activity time
                 session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -110,29 +122,44 @@ def about():
 
 @app.route('/login', methods=['POST'])
 def login():
-    global registeredAccsAndTimes
+    global ip_attempt_tracker
+    global ip_timeout_list
+    
+    ip_address = request.remote_addr # Client IP address
+    
+    if ip_address in ip_timeout_list: # Check if IP is already in timeout
+        error_message = f"Too many failed login attempts. Please try again in {LOCKOUT_DURATION} seconds"
+        #error_message = "Too many failed login attempts. Please try again later."
+        return render_template('old-user.html', error_message=error_message)
+    
     [username,isAdmin] = checkLogin(request.form['username'],request.form['password'])
-    print(isAdmin)
-    if username not in timeout: # LOGIN
+    if isAdmin != -1: # LOGIN
         session.permanent = True  # Permanent session (session exist after browser closing)
         session['username'] = username
         session['isAdmin'] = str(isAdmin)
         session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        timerEnd(username, 0)
-        return redirect('/dashboard.html')
+        
+        # Clear attempts for IP
+        ip_attempt_tracker = [pair for pair in ip_attempt_tracker if pair[0] != ip_address]
+        return render_template('/dashboard.html')
 
-    if not any(pair[0] == username for pair in registeredAccsAndTimes):
-        registeredAccsAndTimes.append([username,0])
-
-    for i,(user,count) in enumerate(registeredAccsAndTimes):
-        if username==user:
-            registeredAccsAndTimes[i][1] = count+1
-            if registeredAccsAndTimes[i][1]>=5:
-                print(username)
-                timeout.append(username)
-                stop_event, thread = start_background_timer(username,1)
-                
-    print(registeredAccsAndTimes)
+    else:  # Failed login
+        # Check if IP is already being tracked
+        if not any(pair[0] == ip_address for pair in ip_attempt_tracker):
+            ip_attempt_tracker.append([ip_address, 1])
+        else:
+            for i, (ip, count) in enumerate(ip_attempt_tracker):
+                if ip_address == ip:
+                    ip_attempt_tracker[i][1] = count + 1 # Inc attempt
+                    
+                    # If max attempts reached
+                    if ip_attempt_tracker[i][1] >= MAX_LOGIN_ATTEMPTS:
+                        print(f"IP {ip_address} has been timed out")
+                        ip_timeout_list.append(ip_address)
+                        stop_event, thread = start_background_timer(ip_address, 1)
+        
+        print(ip_attempt_tracker)           
+    
     return render_template('old-user.html', username=username, error_message = "Invalid username or password!")
 
 @app.route('/saveProfile', methods=['POST'])
@@ -148,7 +175,7 @@ def saveProfile():
 def dashboard():
     isAdmin = session.get('isAdmin')
     if not session.get('username'):  # Check if logged in
-        return redirect('/old-user.html')
+        return render_template('/old-user.html', error_message = "dash")
     
     if isAdmin == '0':
         return render_template('dashboard.html')
@@ -161,7 +188,7 @@ def profile():
     isAdmin = session.get('isAdmin')
     
     if not name:  # If not logged in, redirect to login page
-        return redirect('/old-user.html')
+        return render_template('/old-user.html', error_message = "prof")
     
     if isAdmin=='0':
         role = "User"
@@ -178,7 +205,7 @@ def settings():
     name = session.get('username')
     
     if not name:  # If not logged in, redirect to login page
-        return redirect('/old-user.html')
+        return render_template('/old-user.html', error_message = "settings")
     
     return render_template('settings.html')
 
@@ -202,7 +229,7 @@ def admin():
     name = session.get('username')
 
     if not name:  # If not logged in, redirect to login page
-        return redirect('/old-user.html')
+        return render_template('/old-user.html', error_message = "admin")
     [user,email,data] = retrieveData(name)
     if data==0:
         return render_template('chief.html', image=data, defaultHidden="", profHidden="hidden")

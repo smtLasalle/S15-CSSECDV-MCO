@@ -72,6 +72,9 @@ def checkEmail(email):
     return 0
 
 def checkLogin(username, password):
+    if password == "":
+        return [username,-1] # invalid login
+    
     cursor = db.cursor()
     query = "SELECT * FROM web_user WHERE username = %s"
     cursor.execute(query,[username])
