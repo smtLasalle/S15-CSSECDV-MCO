@@ -61,7 +61,7 @@
                                 <div class="form-title">Set your budget</div>
                                 <hr>
                                 <label for="amount-input"><b>Amount</b></label>
-                                <input type="number" placeholder="Enter amount" min="0" id="amount-input">
+                                <input type="number" placeholder="Enter amount" min="0" id="amount-input" value={{net_worth}}>
     
                                 <button type="submit" id="set-btn" onclick="closeBalanceForm()">Set</button>
                             </form>
@@ -69,7 +69,7 @@
                         
                         <div class="balance-content">
                             <div id="currency">Php</div>
-                            <div id="amount">40000.00</div>
+                            <div id="amount">{{net_worth}}</div>
                         </div>
     
                         <script>
@@ -99,11 +99,11 @@
                                 <div class="form-title">Add expenses</div>
                                 <hr>
                                 <label for="expenses-item"><b>Item</b></label>
-                                <input type="text" placeholder="Enter Item Name" id="expenses-item"><br>
+                                <input type="text" placeholder="Enter Item Name" id="expenses-item" value="title"><br>
                                 <label for="amt-input"><b>Price</b></label>
-                                <input type="number" placeholder="Enter amount" min="0" id="amt-input">
+                                <input type="number" placeholder="Enter amount" min="0" id="amt-input" value="price">
                                 <label for="expenses-date"><b>Date purchased</b></label>
-                                <input type="date" placeholder="Enter Item Name" id="expenses-date">
+                                <input type="date" placeholder="Enter Item Name" id="expenses-date" value="expense_date">
     
                                 <button type="submit" id="add-exp-btn" onclick="closeExpensesForm()">Add</button>
                             </form>

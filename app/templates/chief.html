@@ -18,9 +18,9 @@
                 <h2>PennyWise</h2>
             </div>
             <div class="items">
-                <li><i class="fa-solid fa-user"></i><a href="#">Profile</a></li>
-                <li><i class="fa-solid fa-display"></i><a href="#">Dashboard</a></li>
-                <li><i class="fa-solid fa-gear"></i><a href="#">Settings</a></li>
+                <li><i class="fa-solid fa-user"></i><a href="profile.html">Profile</a></li>
+                <li><i class="fa-solid fa-display"></i><a href="dashboard.html">Dashboard</a></li>
+                <li><i class="fa-solid fa-gear"></i><a href="settings.html">Settings</a></li>
                 <li><i class="fa-solid fa-arrow-right-from-bracket"></i><a href="/logout">Log Out</a></li>
             </div>
         </section>
@@ -36,7 +36,8 @@
 
                 <div class="profile">
                     <i class="fa-regular fa-bell"></i>
-                    <img src="../static/image/noprofil.jpg" alt="">
+                    <img src="../static/image/noprofil.jpg" alt="" width="100" id="preview" height="100" {{defaultHidden}}>
+                    <img src="data:image/jpeg;base64,{{image}}" alt="" id="preview" width="100" height="100" {{profHidden}}>
                 </div>
             </div>
 
