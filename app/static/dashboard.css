@@ -121,8 +121,7 @@ body {
 .dashboard {
     font-size: 50px;
     grid-row: 1/7;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: auto;
     padding-top: 10px;
 }
 
