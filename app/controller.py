@@ -7,7 +7,7 @@ import os
 import traceback
 from datetime import datetime, timedelta
 
-TIMEOUT_DURATION = timedelta(seconds=60) # Session timeout time
+TIMEOUT_DURATION = timedelta(seconds=300) # Session timeout time
 MAX_LOGIN_ATTEMPTS = 5  # Maximum failed login attempts before timeout
 LOCKOUT_DURATION = 20  # Lockout duration in seconds
 DEBUG_FLAG = False # For detailed errors. False in production
@@ -173,7 +173,11 @@ def dashboard():
         return redirect('/old-user.html')
     
     user = retrieveData(name)
-    return render_template('dashboard.html', **user)
+    user_id = user['user_id']
+    expenses = get_expenses(user_id)
+    goals = get_goals(user_id)
+    
+    return render_template('dashboard.html', **user, expenses=expenses, goals=goals)
 
 
 @app.route('/profile.html')
@@ -219,6 +223,105 @@ def admin():
     if not user['image']:
         return render_template('chief.html', image=user['image'], defaultHidden="", profHidden="hidden")
     return render_template('chief.html', image=user['image'], defaultHidden="hidden", profHidden="")
+
+@app.route('/set_balance', methods=['POST'])
+def set_balance():
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    amount = request.form['amount']
+    update_balance(name, amount)
+    print(f"[{datetime.now()}] User [{name}] updated balance to {amount}")
+    
+    return redirect('/dashboard.html')
+
+@app.route('/add_expense', methods=['POST'])
+def add_expense():
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    user = retrieveData(name)
+    title = request.form['title']
+    price = request.form['price']
+    expense_date = request.form.get('expense_date') or datetime.today().strftime("%Y-%m-%d")
+    isIncome = int(request.form.get('isIncome', 0))  
+    
+    if not title:
+        title = 'Income' if isIncome else 'Expense'
+    
+    user_id = user['user_id']
+    add_transaction(user_id, title, price, expense_date, isIncome)
+    
+    # Update balance if it's an expense
+    if int(isIncome) == 0:
+        user = retrieveData(name)
+        new_balance = user['net_worth'] - int(price)
+        update_balance(name, new_balance)
+    else:
+        user = retrieveData(name)
+        new_balance = user['net_worth'] + int(price)
+        update_balance(name, new_balance)
+    
+    print(f"[{datetime.now()}] User [{name}] added {'income' if int(isIncome) else 'expense'}: {title} - {price}")
+    
+    return redirect('/dashboard.html')
+
+@app.route('/add_goal', methods=['POST'])
+def add_goal():
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    user = retrieveData(name)
+    goal_name = request.form['goal_name'] or 'Goal'
+    price = request.form['price']
+    
+    user_id = user['user_id']
+    add_user_goal(user_id, goal_name, price)
+    
+    print(f"[{datetime.now()}] User [{name}] added goal: {goal_name} - {price}")
+    
+    return redirect('/dashboard.html')
+
+@app.route('/delete_expense/<int:expense_id>', methods=['POST'])
+def delete_expense(expense_id):
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    # Get the expense details before deleting
+    user = retrieveData(name)
+    expense = get_expense_by_id(expense_id)
+    if expense and expense[0] == user['user_id']:  # Verify the expense belongs to the user
+        # Update balance if deleting an expense
+        user = retrieveData(name)
+        if expense[4] == 0:  # It was an expense
+            new_balance = user['net_worth'] + expense[2]
+        else:  # It was income
+            new_balance = user['net_worth'] - expense[2]
+        
+        update_balance(name, new_balance)
+        delete_expense_by_id(expense_id)
+        print(f"[{datetime.now()}] User [{name}] deleted {'income' if expense[4] else 'expense'}: {expense[1]}")
+    
+    return redirect('/dashboard.html')
+
+@app.route('/delete_goal/<int:goal_id>', methods=['POST'])
+def delete_goal(goal_id):
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    # Verify the goal belongs to the user
+    user = retrieveData(name)
+    goal = get_goal_by_id(goal_id)
+    if goal and goal[0] == user['user_id']:
+        delete_goal_by_id(goal_id)
+        print(f"[{datetime.now()}] User [{name}] deleted goal: {goal[1]}")
+    
+    return redirect('/dashboard.html')
 
 @app.errorhandler(Exception)
 def notFound(e):

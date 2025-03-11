@@ -3,7 +3,7 @@ TODO: (indented if dones)
     2.  IP based anti brute force
     3.  User session handling
 4.  Log file
-5.  User features
+    5.  User features
 6.  Admin features
     7.  Error messaging
 8.  HTTPS

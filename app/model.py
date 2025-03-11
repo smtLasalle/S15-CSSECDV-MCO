@@ -110,6 +110,7 @@ def retrieveData(username):
     image = base64.b64encode(result[3]).decode('utf-8') if result[3] else None
     
     return {
+        "user_id": result[0],
         "username": result[1],
         "isAdmin": result[2],
         "first_name": result[4],
@@ -135,12 +136,6 @@ def saveToDB(data, username):
     
     user_id = result[0]
     
-    '''
-    query = "SELECT * FROM profile_img WHERE user_id = %s"
-    cursor.execute(query, [user_id])
-    result = cursor.fetchone()
-    '''
-    
     try:
         if result:
             query = "UPDATE web_user SET prof_img = %s WHERE user_id = %s"
@@ -165,3 +160,59 @@ def saveToDB(data, username):
         return False
 
     return True
+
+def update_balance(username, amount):
+    cursor = db.cursor()
+    query = "UPDATE web_user SET net_worth = %s WHERE username = %s"
+    cursor.execute(query, (amount, username))
+    db.commit()
+    
+def add_transaction(user_id, title, price, expense_date, isIncome):
+    cursor = db.cursor()
+    query = "INSERT INTO expense_list (user_id, title, price, expense_date, isIncome) VALUES (%s, %s, %s, %s, %s)"
+    cursor.execute(query, (user_id, title, price, expense_date, isIncome))
+    db.commit()
+    return cursor.lastrowid  # Returns the auto-incr expense_id
+
+def get_expenses(user_id):
+    cursor = db.cursor()
+    query = "SELECT expense_id, title, price, expense_date, isIncome FROM expense_list WHERE user_id = %s ORDER BY expense_date DESC"
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()
+
+def add_user_goal(user_id, goal_name, price):
+    cursor = db.cursor()
+    query = "INSERT INTO goal_list (user_id, goal_name, price) VALUES (%s, %s, %s)"
+    cursor.execute(query, (user_id, goal_name, price))
+    db.commit()
+    return cursor.lastrowid  # Returns the auto-incr goal_id
+
+def get_goals(user_id):
+    cursor = db.cursor()
+    query = "SELECT goal_id, goal_name, price FROM goal_list WHERE user_id = %s"
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()
+
+def get_expense_by_id(expense_id):
+    cursor = db.cursor()
+    query = "SELECT user_id, title, price, expense_date, isIncome FROM expense_list WHERE expense_id = %s"
+    cursor.execute(query, [expense_id])
+    return cursor.fetchone()
+
+def delete_expense_by_id(expense_id):
+    cursor = db.cursor()
+    query = "DELETE FROM expense_list WHERE expense_id = %s"
+    cursor.execute(query, [expense_id])
+    db.commit()
+
+def get_goal_by_id(goal_id):
+    cursor = db.cursor()
+    query = "SELECT user_id, goal_name, price FROM goal_list WHERE goal_id = %s"
+    cursor.execute(query, [goal_id])
+    return cursor.fetchone()
+
+def delete_goal_by_id(goal_id):
+    cursor = db.cursor()
+    query = "DELETE FROM goal_list WHERE goal_id = %s"
+    cursor.execute(query, [goal_id])
+    db.commit()

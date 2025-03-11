@@ -123,6 +123,7 @@ body {
     grid-row: 1/7;
     overflow: auto;
     padding-top: 10px;
+    padding-bottom: 20px;
 }
 
 .dashboard .dashboard-content {
@@ -152,6 +153,23 @@ body {
 .history {
     font-size: 20px;
     width: 280px;
+}
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+}
+
+.delete-btn:hover {
+    background-color: #ff0000;
 }
 
 /*----------------------------- BALANCE -----------------------------*/
@@ -280,9 +298,10 @@ body {
     border-radius: 10px;
     display: none;
     font-size: 20px;
-    height: 185px;
+    height: auto;
     padding-left: 15px;
     padding-top: 10px;
+    padding-bottom: 10px;
     position: relative;
     text-align: left;
     width: 350px;
