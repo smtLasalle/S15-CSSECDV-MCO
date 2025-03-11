@@ -13,7 +13,7 @@ TODO: (indented if dones)
 Optionals
 1. Settings feature
 2. Further backend optimization
-3. Frontend streamlining
+    3. Frontend streamlining
 
 Notes (respective numbers with todo list):
 1.  Check if actually img file (sir said something about this)
