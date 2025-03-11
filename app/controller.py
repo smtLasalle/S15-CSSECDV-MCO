@@ -4,6 +4,7 @@ from app.model import *
 import time
 import threading
 import os
+import traceback
 from datetime import datetime, timedelta
 
 TIMEOUT_DURATION = timedelta(seconds=60) # Session timeout time
@@ -17,7 +18,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=15) # Session timeo
 app.config['SESSION_TYPE'] = 'filesystem'
 
 # Track IP addresses instead of usernames
-ip_attempt_tracker = []  # List of [ip_address, attempt_count] pairs
+ip_attempt_tracker = {}  # Dictionary of [ip_address, attempt_count] pairs
 ip_timeout_list = []     # List of IP addresses that are currently timed out
 
 print(f"New server session started at {datetime.now()}")
@@ -39,7 +40,8 @@ def start_background_timer(ip_address, rem):
 def timer_end(ip_address, rem):
     global ip_attempt_tracker
     global ip_timeout_list
-    ip_attempt_tracker = [pair for pair in ip_attempt_tracker if pair[0] != ip_address]
+    if ip_address in ip_attempt_tracker:
+        del ip_attempt_tracker[ip_address]
     if rem:
         ip_timeout_list.remove(ip_address)
 
@@ -129,31 +131,28 @@ def login():
     if isAdmin != -1: # LOGIN
         session.permanent = True  # Permanent session (session exist after browser closing)
         session['username'] = username
-        #session['isAdmin'] = isAdmin
         session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f"[{datetime.now()}] IP address [{ip_address}] logged in with username [{username}]")
         
         # Clear attempts for IP
-        ip_attempt_tracker = [pair for pair in ip_attempt_tracker if pair[0] != ip_address]
+        if ip_address in ip_attempt_tracker:
+            del ip_attempt_tracker[ip_address]
         return redirect('/dashboard.html')
 
     else:  # Failed login
         # Check if IP is already being tracked
-        print(f"[{datetime.now()}] IP address [{ip_address}] attempting to login with username [{username}]")
-        if not any(pair[0] == ip_address for pair in ip_attempt_tracker):
-            ip_attempt_tracker.append([ip_address, 1])
+        print(f"[{datetime.now()}] IP address [{ip_address}] attempting to login with username [{username}].", end=" ")
+        if ip_address not in ip_attempt_tracker:
+            ip_attempt_tracker[ip_address] = 1
+            print(f"Attempts = {ip_attempt_tracker[ip_address]}")
         else:
-            for i, (ip, count) in enumerate(ip_attempt_tracker):
-                if ip_address == ip:
-                    ip_attempt_tracker[i][1] = count + 1 # Inc attempt
-                    
-                    # If max attempts reached
-                    if ip_attempt_tracker[i][1] >= MAX_LOGIN_ATTEMPTS:
-                        print(f"IP {ip_address} has been timed out")
-                        ip_timeout_list.append(ip_address)
-                        stop_event, thread = start_background_timer(ip_address, 1)
-        
-        print(ip_attempt_tracker)           
+            ip_attempt_tracker[ip_address] += 1  # Inc attempt
+            print(f"Attempts = {ip_attempt_tracker[ip_address]}")
+            # If max attempts reached
+            if ip_attempt_tracker[ip_address] >= MAX_LOGIN_ATTEMPTS:
+                print(f"IP {ip_address} has been timed out")
+                ip_timeout_list.append(ip_address)
+                stop_event, thread = start_background_timer(ip_address, 1)         
     
     return render_template('old-user.html', username=username, error_message = "Invalid username or password!")
 
@@ -174,7 +173,7 @@ def dashboard():
         return redirect('/old-user.html')
     
     user = retrieveData(name)
-    return render_template('dashboard.html', isAdmin=user['isAdmin'])
+    return render_template('dashboard.html', **user)
 
 
 @app.route('/profile.html')
@@ -184,15 +183,10 @@ def profile():
         return redirect('/old-user.html')
     
     user = retrieveData(name)
-    
-    if user['isAdmin'] == 0:
-        role = "User"
-    elif user['isAdmin'] == 1:
-        role = "Admin"
 
     if not user['image']:
-        return render_template('profile.html', **user, defaultHidden="", profHidden="hidden", role = role)
-    return render_template('profile.html',**user, defaultHidden="hidden", profHidden="", role = role)
+        return render_template('profile.html', **user, defaultHidden="", profHidden="hidden")
+    return render_template('profile.html',**user, defaultHidden="hidden", profHidden="")
 
 @app.route('/settings.html')
 def settings():
@@ -235,8 +229,9 @@ def notFound(e):
     errstr = "We can't find the page you're looking for."
 
     if (user and user['isAdmin'] == 1) or DEBUG_FLAG:
+        stack_trace = traceback.format_exc()
         if hasattr(e, 'code'):
             code = e.code
-        errstr = str(e)
+        errstr = f"<b>Error:</b> {str(e)}<br><br><b>Stack Trace:</b><br><pre>{stack_trace}</pre>"
 
     return render_template('error.html', e_code=code, error=errstr)
