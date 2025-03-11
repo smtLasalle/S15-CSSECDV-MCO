@@ -1,48 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings | PennyWise</title>
+{% extends "base.html" %}
 
-    <link rel="icon" href="../static/image/logo.png">
+{% block title %}Settings | PennyWise{% endblock %}
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="../static/settings.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
-<body>
-    <div class="nav-bar">
-        <div class="header">
-            <img src="../static/image/logo.png" id="logo">
-            <div class="header-title">PennyWise</div>
-            <div class="header-subtitle">Friendly Budget Tracker</div>
-        </div>
+{% block css %}
+<link rel="stylesheet" href="../static/settings.css">
+{% endblock %}
 
-        <div class="nav-icons">
-            <a href="profile.html">
-                <ion-icon name="person-outline"></ion-icon>
-                <div class="icon-label">Profile</div>
-            </a>
-
-            <a href="dashboard.html">
-                <ion-icon name="grid-outline"></ion-icon>
-                <div class="icon-label">Dashboard</div>
-            </a>
-            
-            <a href="settings.html">
-                <ion-icon name="settings-outline"></ion-icon>
-                <div class="icon-label">Settings</div>
-            </a>
-
-            <a href="/logout">
-                <ion-icon name="exit-outline"></ion-icon>
-                <div class="icon-label">Log Out</div>
-            </a>
-        </div>
-    </div>
-
+{% block content %}
     <div class="wrapper">
         <div class="left">
             <a onclick="tabs(0)" class="tab active">
@@ -103,40 +67,39 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <!-- Javascript -->
-    <script>
-        const tabBtn=document.querySelectorAll(".tab");
-        const tab=document.querySelectorAll(".info");
+{% block scripts %}
+<script>
+    const tabBtn=document.querySelectorAll(".tab");
+    const tab=document.querySelectorAll(".info");
 
-        function tabs(index) {
-            tabBtn.forEach(function (button, i) {
-                if (i === index) {
-                    button.classList.add("active");
-                } else {
-                    button.classList.remove("active");
-                }
-            });
-
-            tab.forEach(function (node, i) {
-                if (i === index) {
-                    node.style.display="block";
-                } else {
-                    node.style.display="none";
-                }
-            });
-        }
-
-        // Initialize the first tab as active
-        tabs(0);
-
-        // Add event listeners to tab buttons
-        tabBtn.forEach(function (button, index) {
-            button.addEventListener('click', function () {
-                tabs(index);
-            });
+    function tabs(index) {
+        tabBtn.forEach(function (button, i) {
+            if (i === index) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
         });
-    </script>
 
-</body>
-</html>
+        tab.forEach(function (node, i) {
+            if (i === index) {
+                node.style.display="block";
+            } else {
+                node.style.display="none";
+            }
+        });
+    }
+
+    // Initialize the first tab as active
+    tabs(0);
+
+    // Add event listeners to tab buttons
+    tabBtn.forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            tabs(index);
+        });
+    });
+</script>
+{% endblock %}

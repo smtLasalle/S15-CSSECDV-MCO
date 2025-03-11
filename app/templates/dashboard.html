@@ -1,239 +1,198 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard | PennyWise</title>
+{% block title %}Dashboard | PennyWise{% endblock %}
 
-        <link rel="icon" href="../static/image/logo.png">
+{% block css %}
+<link rel="stylesheet" href="../static/dashboard.css">
+{% endblock %}
 
-        <!-- External CSS -->
-        <link rel="stylesheet" href="../static/dashboard.css">
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    </head>
-
-    <body>
-        <div class="nav-bar">
-            <div class="header">
-                <img src="../static/image/logo.png" id="logo">
-                <div class="header-title">PennyWise</div>
-                <div class="header-subtitle">Friendly Budget Tracker</div>
-            </div>
-
-            <div class="nav-icons">
-                <a href="profile.html">
-                    <ion-icon name="person-outline"></ion-icon>
-                    <div class="icon-label">Profile</div>
-                </a>
-
-                <a href="dashboard.html">
-                    <ion-icon name="grid-outline"></ion-icon>
-                    <div class="icon-label">Dashboard</div>
-                </a>
-                
-                <a href="settings.html">
-                    <ion-icon name="settings-outline"></ion-icon>
-                    <div class="icon-label">Settings</div>
-                </a>
-
-                <a href="/logout">
-                    <ion-icon name="exit-outline"></ion-icon>
-                    <div class="icon-label">Log Out</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="main-page">
-            <div class="dashboard">
-                Dashboard
-                <div class="dashboard-header">
+{% block content %}
+    <div class="main-page">
+        <div class="dashboard">
+            Dashboard
+            <div class="dashboard-header">
+                <hr>
+                <div class="history">
+                    Transaction History
                     <hr>
-                    <div class="history">
-                        Transaction History
-                        <hr>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div id="balance">
+                    Balance
+                    <button class="set-balance" onclick="openBalanceForm()">
+                        <ion-icon  name="add-circle-outline"></ion-icon>
+                    </button>
+
+                    <div id="balance-form">
+                        <form action="" method="get" class="new-balance">
+                            <div class="form-title">Set your budget</div>
+                            <hr>
+                            <label for="amount-input"><b>Amount</b></label>
+                            <input type="number" placeholder="Enter amount" min="0" id="amount-input" value={{net_worth}}>
+
+                            <button type="submit" id="set-btn" onclick="closeBalanceForm()">Set</button>
+                        </form>
+                    </div>
+                    
+                    <div class="balance-content">
+                        <div id="currency">Php</div>
+                        <div id="amount">{{net_worth}}</div>
                     </div>
                 </div>
 
-                <div class="dashboard-content">
-                    <div id="balance">
-                        Balance
-                        <button class="set-balance" onclick="openBalanceForm()">
-                            <ion-icon  name="add-circle-outline"></ion-icon>
-                        </button>
+                <div id="expenses">
+                    Expenses
 
-                        <div id="balance-form">
-                            <form action="" method="get" class="new-balance">
-                                <div class="form-title">Set your budget</div>
-                                <hr>
-                                <label for="amount-input"><b>Amount</b></label>
-                                <input type="number" placeholder="Enter amount" min="0" id="amount-input" value={{net_worth}}>
-    
-                                <button type="submit" id="set-btn" onclick="closeBalanceForm()">Set</button>
-                            </form>
-                        </div>
+                    <button class="add-expense" onclick="openExpensesForm()">
+                        <ion-icon  name="add-circle-outline"></ion-icon>
+                    </button>
+
+                    <div id="expenses-form">
+                        <form action="" method="get" class="new-expense">
+                            <div class="form-title">Add expenses</div>
+                            <hr>
+                            <label for="expenses-item"><b>Item</b></label>
+                            <input type="text" placeholder="Enter Item Name" id="expenses-item" value="title"><br>
+                            <label for="amt-input"><b>Price</b></label>
+                            <input type="number" placeholder="Enter amount" min="0" id="amt-input" value="price">
+                            <label for="expenses-date"><b>Date purchased</b></label>
+                            <input type="date" placeholder="Enter Item Name" id="expenses-date" value="expense_date">
+
+                            <button type="submit" id="add-exp-btn" onclick="closeExpensesForm()">Add</button>
+                        </form>
+                    </div>
+                        <div id="expenses-content">
+                            <table class="expenses-table">
+                                <tbody>
+                                <tr>
+                                    <td>Check-up fees</td>
+                                    <td class="goal-unit">1000.00</td>
+                                    <td class="goal-price">10/07/2023</td>
+                                </tr>
+                                <tr>
+                                    <td>Dinner with friends</td>
+                                    <td class="goal-unit">140.00</td>
+                                    <td class="goal-price">10/05/2023</td>
+                                </tr>
+                                <tr>
+                                    <td>New clothes</td>
+                                    <td class="goal-unit">513.00</td>
+                                    <td class="goal-price">10/01/2023</td>
+                                </tr>
+                                <tr>
+                                    <td>Cake</td>
+                                    <td class="goal-unit">305.00</td>
+                                    <td class="goal-price">09/28/2023</td>
+                                </tr>
+                                <tr>
+                                    <td>Party supplies</td>
+                                    <td class="goal-unit">500.00</td>
+                                    <td class="goal-price">09/18/2023</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>  
+                </div>
+
+                <div id="goals">
+                    Goals
+
+                    <button class="add-goals" onclick="openGoalsForm()">
+                        <ion-icon  name="add-circle-outline"></ion-icon>
+                    </button>
+
+                    <div id="goals-form">
+                        <form action="" method="get" class="new-goal">
+                            <div class="form-title">Add goals</div>
+                            <hr>
+                            <label for="goal-item"><b>Goal</b></label>
+                            <input type="text" placeholder="Enter Item Name" id="goal-item"><br>
+                            <label for="target-price"><b>Price</b></label>
+                            <input type="number" placeholder="Enter amount" min="0" id="target-price">
+
+                            <button type="submit" id="add-exp-btn" onclick="closeGoalsForm()">Add</button>
+                        </form>
+                    </div>
+
+                    <div class="confirm">
                         
-                        <div class="balance-content">
-                            <div id="currency">Php</div>
-                            <div id="amount">{{net_worth}}</div>
-                        </div>
-    
-                        <script>
-                            function openBalanceForm() {
-                              document.getElementById("balance-form").style.display="block";
-                              document.getElementById("currency").style.display="none";
-                              document.getElementById("amount").style.display="none";
-                              document.getElementById("goals").style.top="350px";
-                            }
-                            
-                            function closeBalanceForm() {
-                              document.getElementById("balance-form").style.display="none";
-                              document.getElementById("goals").style.top="270px";
-                            }
-                        </script>
                     </div>
 
-                    <div id="expenses">
-                        Expenses
-
-                        <button class="add-expense" onclick="openExpensesForm()">
-                            <ion-icon  name="add-circle-outline"></ion-icon>
-                        </button>
-
-                        <div id="expenses-form">
-                            <form action="" method="get" class="new-expense">
-                                <div class="form-title">Add expenses</div>
-                                <hr>
-                                <label for="expenses-item"><b>Item</b></label>
-                                <input type="text" placeholder="Enter Item Name" id="expenses-item" value="title"><br>
-                                <label for="amt-input"><b>Price</b></label>
-                                <input type="number" placeholder="Enter amount" min="0" id="amt-input" value="price">
-                                <label for="expenses-date"><b>Date purchased</b></label>
-                                <input type="date" placeholder="Enter Item Name" id="expenses-date" value="expense_date">
-    
-                                <button type="submit" id="add-exp-btn" onclick="closeExpensesForm()">Add</button>
-                            </form>
-                        </div>
-
-                        <script>
-                            function openExpensesForm() {
-                              document.getElementById("expenses-form").style.display="block";
-                              document.getElementById("expenses-content").style.display="none";
-                              document.getElementById("expenses").style.paddingBottom="10px";
-                            }
-                            
-                            function closeExpensesForm() {
-                              document.getElementById("expenses-form").style.display="none";
-                            }
-                        </script>
-
-                            <div id="expenses-content">
-                                <table class="expenses-table">
-                                    <tbody>
-                                    <tr>
-                                        <td>Check-up fees</td>
-                                        <td class="goal-unit">1000.00</td>
-                                        <td class="goal-price">10/07/2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dinner with friends</td>
-                                        <td class="goal-unit">140.00</td>
-                                        <td class="goal-price">10/05/2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>New clothes</td>
-                                        <td class="goal-unit">513.00</td>
-                                        <td class="goal-price">10/01/2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cake</td>
-                                        <td class="goal-unit">305.00</td>
-                                        <td class="goal-price">09/28/2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Party supplies</td>
-                                        <td class="goal-unit">500.00</td>
-                                        <td class="goal-price">09/18/2023</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>  
+                    <div id="goals-content">
+                        <table class="goals-table">
+                            <tr>
+                                <td class="goal-name">iPad</td>
+                                <td class="goal-unit">Php</td>
+                                <td class="goal-price">55990.00</td>
+                            </tr>
+                            <tr>
+                                <td class="goal-name">Dollhouse</td>
+                                <td class="goal-unit">Php</td>
+                                <td class="goal-price">1999.00</td>
+                            </tr>
+                            <tr>
+                                <td class="goal-name">PS5</td>
+                                <td class="goal-unit">Php</td>
+                                <td class="goal-price">27990.00</td>
+                            </tr>
+                            <tr>
+                                <td class="goal-name">Shoes</td>
+                                <td class="goal-unit">Php</td>
+                                <td class="goal-price">1795.00</td>
+                            </tr>
+                            <tr>
+                                <td class="goal-name">Clothes</td>
+                                <td class="goal-unit">Php</td>
+                                <td class="goal-price">185.00</td>
+                            </tr>
+                        </table>
                     </div>
+                </div>                   
+            </div>
+    </div>
+{% endblock %}
 
-                    <div id="goals">
-                        Goals
-
-                        <button class="add-goals" onclick="openGoalsForm()">
-                            <ion-icon  name="add-circle-outline"></ion-icon>
-                        </button>
-
-                        <div id="goals-form">
-                            <form action="" method="get" class="new-goal">
-                                <div class="form-title">Add goals</div>
-                                <hr>
-                                <label for="goal-item"><b>Goal</b></label>
-                                <input type="text" placeholder="Enter Item Name" id="goal-item"><br>
-                                <label for="target-price"><b>Price</b></label>
-                                <input type="number" placeholder="Enter amount" min="0" id="target-price">
+{% block scripts %}
+<script>
+    function openBalanceForm() {
+      document.getElementById("balance-form").style.display="block";
+      document.getElementById("currency").style.display="none";
+      document.getElementById("amount").style.display="none";
+      document.getElementById("goals").style.top="350px";
+    }
     
-                                <button type="submit" id="add-exp-btn" onclick="closeGoalsForm()">Add</button>
-                            </form>
-                        </div>
+    function closeBalanceForm() {
+      document.getElementById("balance-form").style.display="none";
+      document.getElementById("goals").style.top="270px";
+    }
 
-                        <div class="confirm">
-                          
-                        </div>
+    function openGoalsForm() {
+        document.getElementById("goals-form").style.display="block";
+        document.getElementById("goals-content").style.display="none";
+        document.getElementById("goals").style.marginBottom="10px";
+    }
+    
+    function closeGoalsForm() {
+        document.getElementById("goals-form").style.display="none";
+    }
 
-                        <script>
-                            function openGoalsForm() {
-                              document.getElementById("goals-form").style.display="block";
-                              document.getElementById("goals-content").style.display="none";
-                              document.getElementById("goals").style.marginBottom="10px";
-                            }
-                            
-                            function closeGoalsForm() {
-                              document.getElementById("goals-form").style.display="none";
-                            }
+    function openConfirm(){
+        
+    }
+    function closeConfirm(){
 
-                            function openConfirm(){
-                                
-                            }
-                            function closeConfirm(){
+    }
 
-                            }
-                        </script>
-
-                        <div id="goals-content">
-                            <table class="goals-table">
-                                <tr>
-                                  <td class="goal-name">iPad</td>
-                                  <td class="goal-unit">Php</td>
-                                  <td class="goal-price">55990.00</td>
-                                </tr>
-                                <tr>
-                                  <td class="goal-name">Dollhouse</td>
-                                  <td class="goal-unit">Php</td>
-                                  <td class="goal-price">1999.00</td>
-                                </tr>
-                                <tr>
-                                  <td class="goal-name">PS5</td>
-                                  <td class="goal-unit">Php</td>
-                                  <td class="goal-price">27990.00</td>
-                                </tr>
-                                <tr>
-                                  <td class="goal-name">Shoes</td>
-                                  <td class="goal-unit">Php</td>
-                                  <td class="goal-price">1795.00</td>
-                                </tr>
-                                <tr>
-                                  <td class="goal-name">Clothes</td>
-                                  <td class="goal-unit">Php</td>
-                                  <td class="goal-price">185.00</td>
-                                </tr>
-                              </table>
-                        </div>
-                    </div>                   
-                </div>
-        </div>
-</html>
+    function openExpensesForm() {
+        document.getElementById("expenses-form").style.display="block";
+        document.getElementById("expenses-content").style.display="none";
+        document.getElementById("expenses").style.paddingBottom="10px";
+    }
+    
+    function closeExpensesForm() {
+        document.getElementById("expenses-form").style.display="none";
+    }
+</script>
+{% endblock %}

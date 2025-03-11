@@ -1,14 +1,14 @@
 TODO: (indented if dones)
 1.  Profile file upload type detection
-2.  IP based anti brute force
+    2.  IP based anti brute force
     3.  User session handling
 4.  Log file
 5.  User features
 6.  Admin features
-7.  Error messaging
+    7.  Error messaging
 8.  HTTPS
-9.  DB expansion
-10. Password thing
+    9.  DB expansion
+    10. Password thing
 
 Optionals
 1. Settings feature
@@ -18,19 +18,20 @@ Optionals
 Notes (respective numbers with todo list):
 1.  Check if actually img file (sir said something about this)
     Preview stopped working, might fix
-3.  Implementation of session timeout
+    2.  IP bruteforce-proc should be fine now. Need to test in production
+    3.  Implementation of session timeout
 4.  Logging features for authentication, transactions, and administrative actions.
 5.  AT LEAST 2 diffent kinds of actions. (ie. post and edit). More features + more bonus!
     Application should have a feature to save and display text input. At least 2 numeric input
 6.  AT LEAST 2 diffent kinds of admin-only actions. More features + more bonus!
-7.  Error messaging. Detailed with stack trace when debug enabled. Generic error message when debug is turned off.
+    7.  Error messaging. Detailed with stack trace when debug enabled. Generic error message when debug is turned off.
+    Err messaging should be fine now. Need to test in production
 8.  Self-signed certificate is acceptable
-9.  Implement db for user features
-10. At least 8 chars
+    9.  Implement db for user features
+    10. At least 8 chars
 
 In progress:
-DB expansion
-User features
+Log File (currently printf entries in controlller.py)
 
 USERS IN DB
 zyn         | password

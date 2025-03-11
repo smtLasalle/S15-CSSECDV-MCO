@@ -1,48 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | PennyWise</title>
+{% extends "base.html" %}
 
-    <link rel="icon" href="../static/image/logo.png">
+{% block title %}Profile | PennyWise{% endblock %}
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="../static/profile.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</head>
-<body>
-    <div class="nav-bar">
-        <div class="header">
-            <img src="../static/image/logo.png" id="logo">
-            <div class="header-title">PennyWise</div>
-            <div class="header-subtitle">Friendly Budget Tracker</div>
-        </div>
-        
-        <div class="nav-icons">
-            <a href="profile.html">
-                <ion-icon name="person-outline"></ion-icon>
-                <div class="icon-label">Profile</div>
-            </a>
+{% block css %}
+<link rel="stylesheet" href="../static/profile.css">
+{% endblock %}
 
-            <a href="dashboard.html">
-                <ion-icon name="grid-outline"></ion-icon>
-                <div class="icon-label">Dashboard</div>
-            </a>
-            
-            <a href="settings.html">
-                <ion-icon name="settings-outline"></ion-icon>
-                <div class="icon-label">Settings</div>
-            </a>
-
-            <a href="/logout">
-                <ion-icon name="exit-outline"></ion-icon>
-                <div class="icon-label">Log Out</div>
-            </a>
-        </div>
-    </div>
-
+{% block content %}
     <div class="wrapper">
         <div class="left">
             <img src="../static/image/noprofil.jpg" alt="user" width="100" id="preview" height="100" {{defaultHidden}}>
@@ -83,5 +47,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

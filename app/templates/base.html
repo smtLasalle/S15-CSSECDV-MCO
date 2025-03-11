@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}PennyWise{% endblock %}</title>
+
+        <link rel="icon" href="../static/image/logo.png">
+
+        <!-- Common CSS -->
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <!-- Page-specific CSS -->
+        {% block css %}{% endblock %}
+    </head>
+<body>
+
+    <!-- Global Navbar -->
+    <div class="nav-bar">
+        <div class="header">
+            <img src="../static/image/logo.png" id="logo">
+            <div class="header-title">PennyWise</div>
+            <div class="header-subtitle">Friendly Budget Tracker</div>
+        </div>
+
+        <div class="nav-icons">
+            <a href="profile.html">
+                <ion-icon name="person-outline"></ion-icon>
+                <div class="icon-label">Profile</div>
+            </a>
+
+            <a href="dashboard.html">
+                <ion-icon name="grid-outline"></ion-icon>
+                <div class="icon-label">Dashboard</div>
+            </a>
+            
+            <a href="settings.html">
+                <ion-icon name="settings-outline"></ion-icon>
+                <div class="icon-label">Settings</div>
+            </a>
+
+            <a href="/logout">
+                <ion-icon name="exit-outline"></ion-icon>
+                <div class="icon-label">Log Out</div>
+            </a>
+
+            {% if isAdmin %}
+            <a href="chief.html">
+                <ion-icon name="desktop-outline"></ion-icon>
+                <div class="icon-label">Admin panel</div>
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
