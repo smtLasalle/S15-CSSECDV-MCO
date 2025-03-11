@@ -112,7 +112,13 @@ def retrieveData(username):
     return {
         "username": result[1],
         "isAdmin": result[2],
+        "first_name": result[4],
+        "last_name": result[5],
         "email": result[6],
+        "phone_number": result[7],
+        "birth_date": result[10],
+        "account_date": result[11],
+        "net_worth": result[12],
         "image": image
     }
 
