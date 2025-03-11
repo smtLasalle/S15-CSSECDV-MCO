@@ -6,17 +6,17 @@ import re
 
 def getID(inc):
     cursor = db.cursor()
-    print(cursor)
+    #print(cursor)
     try:
         cursor.execute("SELECT MAX(user_id) FROM web_user")
-        print(cursor)
+        #print(cursor)
     except Exception as e:
         print("error somewhere", e)
-    print('Getting ID')
+    #print('Getting ID')
     result = cursor.fetchone()
     if not result[0]:
         return 1
-    print(result[0])
+    #print(result[0])
     if inc:
         return result[0]+1
     return result[0]
@@ -54,7 +54,7 @@ def insertNewUser(userid, username, firstName, lastName, email, password, phoneN
     cursor = db.cursor()
     profImg = None
     isAdmin = 0
-    print("pass: " + str(hashed))
+    #print("pass: " + str(hashed))
     query = "INSERT INTO web_user (user_id, username, isAdmin, prof_img, first_name, last_name, email, phone_number, password, salt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     cursor.execute(query, (userid, username, isAdmin, profImg, firstName, lastName, email, phoneNumber, str(hashed), salt))
     db.commit()
@@ -86,26 +86,35 @@ def checkLogin(username, password):
             desired_key_bytes=32,
             rounds=178
         )
-        print(result[8].encode('utf-8'))
-        print(password.encode('utf-8'))
+        #print(result[8].encode('utf-8'))
+        #print(password.encode('utf-8'))
         if str(hashed)==str(result[8]):
             return [username,result[2]]
         
     return [username,-1] # invalid login
 
 def retrieveData(username):
-    print("retrieve: "+ username)
+    if username is None:
+        return None
+    
+    #print("retrieve: "+ username)
     cursor = db.cursor()
     query = "SELECT * FROM web_user WHERE username = %s"
     cursor.execute(query,[username])
     result = cursor.fetchone()
-    if result[3]:
-        print("image found")
-        image = base64.b64encode(result[3]).decode('utf-8')
-    else:
-        image = 0
-        
-    return result[1],result[6], image
+    
+    if result is None:
+        return None
+    
+    # Convert image data to base64 if available
+    image = base64.b64encode(result[3]).decode('utf-8') if result[3] else None
+    
+    return {
+        "username": result[1],
+        "isAdmin": result[2],
+        "email": result[6],
+        "image": image
+    }
 
 def saveToDB(data, username):
     cursor = db.cursor()
