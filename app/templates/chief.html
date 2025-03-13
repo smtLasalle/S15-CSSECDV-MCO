@@ -49,21 +49,21 @@
                 <div class="val-box">
                     <i class="fa-solid fa-users"></i>
                     <div>
-                        <h3>1,234</h3>
+                        <h3>{{ total_users }}</h3>
                         <span>Total Users</span>
                     </div>
                 </div>
                 <div class="val-box">
                     <i class="fa-solid fa-users"></i>
                     <div>
-                        <h3>1,234</h3>
+                        <h3>{{ total_admins }}</h3>
                         <span>Total Admins</span>
                     </div>
                 </div>
                 <div class="val-box">
                     <i class="fa-solid fa-users"></i>
                     <div>
-                        <h3>1,234</h3>
+                        <h3>{{ total_transactions }}</h3>
                         <span>Transactions</span>
                     </div>
                 </div>
@@ -83,102 +83,93 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for user in all_users %}
                         <tr>
                             <td class="people">
                                 <img src="../static/image/noprofil.jpg" alt="">
                                 <div class="people-de">
-                                    <h5>USER1</h5>
-                                    <p>...@gmail.com</p>
+                                    <h5>{{ user[0] }}</h5>
+                                    <p>{{ user[1] }}</p>
                                 </div>
                             </td>
 
                             <td class="people-des">
-                                <h5>Dela Cruz</h5>
+                                <h5>{{ user[2] }} {{ user[3] }}</h5>
                             </td>
 
-                            <td class="user_role">
-                                <p>User</p>
-                            </td>
-
-                            <td class="phone_number">
-                                <p>+63...</p>
-                            </td>
-
-                            <td class="birth_date">
-                                <p>MM/DD/YYYY</p>
-                            </td>
-
-                            <td class="account_date">
-                                <p>MM/DD/YYYY</p>
-                            </td>
-
-                            <td class="edit"><a href="#">Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td class="people">
-                                <img src="../static/image/noprofil.jpg" alt="">
-                                <div class="people-de">
-                                    <h5>USER2</h5>
-                                    <p>...@gmail.com</p>
-                                </div>
-                            </td>
-
-                            <td class="people-des">
-                                <h5>Dela Cruz</h5>
-                            </td>
-
-                            <td class="admin_role">
-                                <p>Admin</p>
+                            <td class="{% if user[4] == 1 %}admin_role{% else %}user_role{% endif %}">
+                                <p>{% if user[4] == 1 %}Admin{% else %}User{% endif %}</p>
                             </td>
 
                             <td class="phone_number">
-                                <p>+63...</p>
+                                <p>{{ user[5] }}</p>
                             </td>
 
                             <td class="birth_date">
-                                <p>MM/DD/YYYY</p>
+                                <p>{% if user[6] %}{{ user[6].strftime('%m/%d/%Y') }}{% else %}Not Set{% endif %}</p>
                             </td>
 
                             <td class="account_date">
-                                <p>MM/DD/YYYY</p>
+                                <p>{% if user[7] %}{{ user[7].strftime('%m/%d/%Y') }}{% else %}Not Set{% endif %}</p>
                             </td>
 
-                            <td class="edit"><a href="#">Edit</a></td>
+                            <td class="edit"><a href="#" onclick="openUserEditForm({{ user[8] }}, '{{ user[2] }}', '{{ user[3] }}', '{{ user[5] }}', '{% if user[6] %}{{ user[6].strftime('%Y-%m-%d') }}{% endif %}', {{ user[4] }})">Edit</a></td>
                         </tr>
-                        <tr>
-                            <td class="people">
-                                <img src="../static/image/noprofil.jpg" alt="">
-                                <div class="people-de">
-                                    <h5>USER3</h5>
-                                    <p>...@gmail.com</p>
-                                </div>
-                            </td>
-
-                            <td class="people-des">
-                                <h5>Dela Cruz</h5>
-                            </td>
-
-                            <td class="user_role">
-                                <p>User</p>
-                            </td>
-
-                            <td class="phone_number">
-                                <p>+63...</p>
-                            </td>
-
-                            <td class="birth_date">
-                                <p>MM/DD/YYYY</p>
-                            </td>
-
-                            <td class="account_date">
-                                <p>MM/DD/YYYY</p>
-                            </td>
-
-                            <td class="edit"><a href="#">Edit</a></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </dir>
         </section>
+        
+        <div id="user-edit-form" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); z-index: 1000;">
+            <form action="/edit_user" method="post" class="edit-user-form">
+                <div class="form-title">Edit User</div>
+                <hr>
+                <input type="hidden" id="edit-user-id" name="user_id">
+                <label for="edit-first-name"><b>First Name</b></label>
+                <input type="text" placeholder="First Name" id="edit-first-name" name="first_name"><br>
+                <label for="edit-last-name"><b>Last Name</b></label>
+                <input type="text" placeholder="Last Name" id="edit-last-name" name="last_name"><br>
+                <label for="edit-phone"><b>Phone Number</b></label>
+                <input type="text" placeholder="Phone Number" id="edit-phone" name="phone_number"><br>
+                <label for="edit-birth-date"><b>Birth Date</b></label>
+                <input type="date" id="edit-birth-date" name="birth_date"><br>
+                <label for="edit-role"><b>Role</b></label>
+                <select id="edit-role" name="isAdmin">
+                    <option value="0">User</option>
+                    <option value="1">Admin</option>
+                </select>
+                <div style="margin-top: 15px;">
+                    <button type="submit" class="edit-btn">Save</button>
+                    <button type="button" class="cancel-btn" onclick="closeUserEditForm()">Cancel</button>
+                </div>
+                <label for="reset-password"><b>Reset Password</b></label>
+                <input type="password" placeholder="New Password" id="reset-password" name="new_password"><br>
+                <input type="checkbox" id="reset-password-check" name="reset_password"> 
+                <label for="reset-password-check">Reset user's password</label><br>
+            </form>
+        </div>
+
+        <script>
+            function openUserEditForm(userId, firstName, lastName, phone, birthDate, isAdmin) {
+                document.getElementById('edit-user-id').value = userId;
+                document.getElementById('edit-first-name').value = firstName;
+                document.getElementById('edit-last-name').value = lastName;
+                document.getElementById('edit-phone').value = phone;
+                document.getElementById('edit-birth-date').value = birthDate;
+                document.getElementById('edit-role').value = isAdmin;
+                document.getElementById('reset-password').value = '';
+                document.getElementById('reset-password-check').checked = false;
+                document.getElementById('user-edit-form').style.display = 'block';
+            }
+            
+            document.getElementById('reset-password-check').addEventListener('change', function() {
+                document.getElementById('reset-password').disabled = !this.checked;
+            });
+                 
+            function closeUserEditForm() {
+                document.getElementById('user-edit-form').style.display = 'none';
+            }
+        </script>
     </body>
 </html>

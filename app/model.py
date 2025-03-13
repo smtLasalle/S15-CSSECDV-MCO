@@ -44,7 +44,7 @@ def newUserCheck(username,email,firstName,lastName,password,confirmPass,phoneNum
 
 def insertNewUser(userid, username, firstName, lastName, email, password, phoneNumber):
     bytes = password.encode('utf-8')
-    salt = bcrypt.gensalt(rounds=30,prefix=b'2b')
+    salt = bcrypt.gensalt(rounds=15,prefix=b'2b')
     hashed = bcrypt.kdf(
         password=bytes,
         salt=salt,
@@ -216,3 +216,71 @@ def delete_goal_by_id(goal_id):
     query = "DELETE FROM goal_list WHERE goal_id = %s"
     cursor.execute(query, [goal_id])
     db.commit()
+    
+def get_all_users(current_admin_username=None):
+    cursor = db.cursor()
+    if current_admin_username:
+        query = """
+        SELECT username, email, first_name, last_name, isAdmin, phone_number, birth_date, account_date, user_id 
+        FROM web_user
+        WHERE username != %s
+        """
+        cursor.execute(query, [current_admin_username])
+    else:
+        query = """
+        SELECT username, email, first_name, last_name, isAdmin, phone_number, birth_date, account_date, user_id 
+        FROM web_user
+        """
+        cursor.execute(query)
+    result = cursor.fetchall()
+    return result
+
+def get_users_count():
+    cursor = db.cursor()
+    query = "SELECT COUNT(*) FROM web_user WHERE isAdmin = 0"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result[0]
+
+def get_admins_count():
+    cursor = db.cursor()
+    query = "SELECT COUNT(*) FROM web_user WHERE isAdmin = 1"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result[0]
+
+def get_transactions_count():
+    cursor = db.cursor()
+    query = "SELECT COUNT(*) FROM expense_list"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result[0]
+
+def update_user(user_id, first_name, last_name, phone_number, birth_date, isAdmin):
+    cursor = db.cursor()
+    query = """
+    UPDATE web_user 
+    SET first_name = %s, last_name = %s, phone_number = %s, birth_date = %s, isAdmin = %s
+    WHERE user_id = %s
+    """
+    cursor.execute(query, (first_name, last_name, phone_number, birth_date, isAdmin, user_id))
+    db.commit()
+    
+def reset_user_password(user_id, new_password):
+    if not new_password:
+        return False
+
+    bytes = new_password.encode('utf-8')
+    salt = bcrypt.gensalt(rounds=15, prefix=b'2b')
+    hashed = bcrypt.kdf(
+        password=bytes,
+        salt=salt,
+        desired_key_bytes=32,
+        rounds=178
+    )
+    
+    cursor = db.cursor()
+    query = "UPDATE web_user SET password = %s, salt = %s WHERE user_id = %s"
+    cursor.execute(query, (str(hashed), salt, user_id))
+    db.commit()
+    return True

@@ -1,16 +1,45 @@
 from flask import render_template, request, make_response, session, redirect, url_for
 from app import app
 from app.model import *
+import logging
+from logging.handlers import RotatingFileHandler
 import time
 import threading
 import os
 import traceback
 from datetime import datetime, timedelta
+from run import DEBUG_FLAG
 
 TIMEOUT_DURATION = timedelta(seconds=300) # Session timeout time
 MAX_LOGIN_ATTEMPTS = 5  # Maximum failed login attempts before timeout
 LOCKOUT_DURATION = 20  # Lockout duration in seconds
-DEBUG_FLAG = False # For detailed errors. False in production
+
+# Logging config
+log_directory = 'logs'
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+logger = logging.getLogger('budget_tracker')
+logger.setLevel(logging.INFO)
+
+# Create rotating file handler (10MB max size, keep 5 backup files)
+file_handler = RotatingFileHandler(
+    os.path.join(log_directory, 'budget_tracker.log'), 
+    maxBytes=10*1024*1024, 
+    backupCount=5
+)
+
+# Log format
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# Console handler for dev build (comment out in production)
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+# Add handlers to logger
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 # Session settings
 app.config['SECRET_KEY'] = os.urandom(12)  # Secure random key
@@ -21,13 +50,14 @@ app.config['SESSION_TYPE'] = 'filesystem'
 ip_attempt_tracker = {}  # Dictionary of [ip_address, attempt_count] pairs
 ip_timeout_list = []     # List of IP addresses that are currently timed out
 
-print(f"New server session started at {datetime.now()}")
+#print(f"New server session started at {datetime.now()}")
+logger.info(f"New server session started")
 
 def start_background_timer(ip_address, rem):
     def timer_function():
-        print(f'Countdown for IP {ip_address} started')
+        logger.debug(f'Countdown for IP {ip_address} started')
         time.sleep(LOCKOUT_DURATION)  # Wait for the specified duration
-        print(f'Countdown for IP {ip_address} finished')
+        logger.debug(f'Countdown for IP {ip_address} finished')
         if not stop_event.is_set():
             timer_end(ip_address, rem)  # Call the callback function
     stop_event = threading.Event()
@@ -54,7 +84,8 @@ def check_session_timeout():
         if last_activity_str:
             last_activity = datetime.strptime(last_activity_str, '%Y-%m-%d %H:%M:%S')
             if (datetime.now() - last_activity > TIMEOUT_DURATION):
-                print(f"[{datetime.now()}] Session with username [{session.get('username')}] timed out")
+                #print(f"[{datetime.now()}] Session with username [{session.get('username')}] timed out")
+                logger.info(f"Session with username [{session.get('username')}] timed out")
                 session.clear()
                 return render_template('old-user.html', error_message = "Session Timeout, Please Log in again")
             else:
@@ -88,7 +119,8 @@ def submit():
     
     if flag == 1:
         insertNewUser(idnum, username, firstName, lastName, email, password, phoneNumber)
-        print(f"[{datetime.now()}] User [{session.get('username')}] was registered")
+        #print(f"[{datetime.now()}] User [{session.get('username')}] was registered")
+        logger.info(f"User [{username}] was registered")
         return render_template('old-user.html', username=username)
     if flag == 0:
         error_message = "Passwords don't match!"
@@ -124,7 +156,8 @@ def login():
     if ip_address in ip_timeout_list: # Check if IP is already in timeout
         #error_message = f"Too many failed login attempts. Please try again in {LOCKOUT_DURATION} seconds"
         error_message = "Too many failed login attempts. Please try again later."
-        print(f"[{datetime.now()}] IP address [{ip_address}] locked out for too many login attempts")
+        #print(f"[{datetime.now()}] IP address [{ip_address}] locked out for too many login attempts")
+        logger.warning(f"IP address [{ip_address}] locked out for too many login attempts")
         return render_template('old-user.html', error_message=error_message)
     
     [username,isAdmin] = checkLogin(request.form['username'],request.form['password'])
@@ -132,7 +165,8 @@ def login():
         session.permanent = True  # Permanent session (session exist after browser closing)
         session['username'] = username
         session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(f"[{datetime.now()}] IP address [{ip_address}] logged in with username [{username}]")
+        #print(f"[{datetime.now()}] IP address [{ip_address}] logged in with username [{username}]")
+        logger.info(f"IP address [{ip_address}] logged in with username [{username}]")
         
         # Clear attempts for IP
         if ip_address in ip_attempt_tracker:
@@ -141,16 +175,18 @@ def login():
 
     else:  # Failed login
         # Check if IP is already being tracked
-        print(f"[{datetime.now()}] IP address [{ip_address}] attempting to login with username [{username}].", end=" ")
+        #print(f"[{datetime.now()}] IP address [{ip_address}] attempting to login with username [{username}].", end=" ")
+        logger.debug(f"IP address [{ip_address}] attempting to login with username [{username}].")
         if ip_address not in ip_attempt_tracker:
             ip_attempt_tracker[ip_address] = 1
-            print(f"Attempts = {ip_attempt_tracker[ip_address]}")
+            #print(f"Attempts = {ip_attempt_tracker[ip_address]}")
         else:
             ip_attempt_tracker[ip_address] += 1  # Inc attempt
-            print(f"Attempts = {ip_attempt_tracker[ip_address]}")
+            #print(f"Attempts = {ip_attempt_tracker[ip_address]}")
             # If max attempts reached
             if ip_attempt_tracker[ip_address] >= MAX_LOGIN_ATTEMPTS:
-                print(f"IP {ip_address} has been timed out")
+                #print(f"IP {ip_address} has been timed out")
+                logger.warning(f"IP {ip_address} has been timed out due to excessive failed login attempts")
                 ip_timeout_list.append(ip_address)
                 stop_event, thread = start_background_timer(ip_address, 1)         
     
@@ -162,7 +198,7 @@ def saveProfile():
     bytePicture = picture.read()
     username = session.get('username')
     if saveToDB(bytePicture, username): # USER PROFPIC CHANGES
-        print(f"[{datetime.now()}] User [{username}] updated profile picture")
+        #print(f"[{datetime.now()}] User [{username}] updated profile picture")
         return render_template('dashboard.html')
     return render_template('profile.html')
 
@@ -205,7 +241,8 @@ def settings():
 @app.route('/logout')
 def logout():
     username = session.get('username')
-    print(f"[{datetime.now()}] User [{username}] logged out")
+    #print(f"[{datetime.now()}] User [{username}] logged out")
+    logger.info(f"User [{username}] logged out")
     session.clear()
     return make_response(render_template('/budget-tracker.html'))
 
@@ -220,9 +257,19 @@ def admin():
     if not user['isAdmin']:
         return redirect('/dashboard.html')
 
+    # Get all users for the admin dashboard
+    all_users = get_all_users(name)
+    total_users = get_users_count()
+    total_admins = get_admins_count()
+    total_transactions = get_transactions_count()
+
     if not user['image']:
-        return render_template('chief.html', image=user['image'], defaultHidden="", profHidden="hidden")
-    return render_template('chief.html', image=user['image'], defaultHidden="hidden", profHidden="")
+        return render_template('chief.html', image=user['image'], defaultHidden="", profHidden="hidden", 
+                               all_users=all_users, total_users=total_users, total_admins=total_admins, 
+                               total_transactions=total_transactions)
+    return render_template('chief.html', image=user['image'], defaultHidden="hidden", profHidden="", 
+                           all_users=all_users, total_users=total_users, total_admins=total_admins, 
+                           total_transactions=total_transactions)
 
 @app.route('/set_balance', methods=['POST'])
 def set_balance():
@@ -232,7 +279,7 @@ def set_balance():
     
     amount = request.form['amount']
     update_balance(name, amount)
-    print(f"[{datetime.now()}] User [{name}] updated balance to {amount}")
+    #print(f"[{datetime.now()}] User [{name}] updated balance to {amount}")
     
     return redirect('/dashboard.html')
 
@@ -264,7 +311,7 @@ def add_expense():
         new_balance = user['net_worth'] + int(price)
         update_balance(name, new_balance)
     
-    print(f"[{datetime.now()}] User [{name}] added {'income' if int(isIncome) else 'expense'}: {title} - {price}")
+    #print(f"[{datetime.now()}] User [{name}] added {'income' if int(isIncome) else 'expense'}: {title} - {price}")
     
     return redirect('/dashboard.html')
 
@@ -281,7 +328,7 @@ def add_goal():
     user_id = user['user_id']
     add_user_goal(user_id, goal_name, price)
     
-    print(f"[{datetime.now()}] User [{name}] added goal: {goal_name} - {price}")
+    #print(f"[{datetime.now()}] User [{name}] added goal: {goal_name} - {price}")
     
     return redirect('/dashboard.html')
 
@@ -304,7 +351,7 @@ def delete_expense(expense_id):
         
         update_balance(name, new_balance)
         delete_expense_by_id(expense_id)
-        print(f"[{datetime.now()}] User [{name}] deleted {'income' if expense[4] else 'expense'}: {expense[1]}")
+        #print(f"[{datetime.now()}] User [{name}] deleted {'income' if expense[4] else 'expense'}: {expense[1]}")
     
     return redirect('/dashboard.html')
 
@@ -319,9 +366,41 @@ def delete_goal(goal_id):
     goal = get_goal_by_id(goal_id)
     if goal and goal[0] == user['user_id']:
         delete_goal_by_id(goal_id)
-        print(f"[{datetime.now()}] User [{name}] deleted goal: {goal[1]}")
+        #print(f"[{datetime.now()}] User [{name}] deleted goal: {goal[1]}")
     
     return redirect('/dashboard.html')
+
+@app.route('/edit_user', methods=['POST'])
+def edit_user():
+    name = session.get('username')
+    if not name:  # Check if logged in
+        return redirect('/old-user.html')
+    
+    # Check if user is admin
+    user = retrieveData(name)
+    if not user['isAdmin']:
+        return redirect('/dashboard.html')
+    
+    user_id = request.form['user_id']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    phone_number = request.form['phone_number']
+    birth_date = request.form['birth_date'] or None
+    isAdmin = int(request.form['isAdmin'])
+    
+    update_user(user_id, first_name, last_name, phone_number, birth_date, isAdmin)
+    
+    # Check if password reset is requested
+    if 'reset_password' in request.form and request.form.get('new_password'):
+        new_password = request.form['new_password']
+        reset_user_password(user_id, new_password)
+        #print(f"[{datetime.now()}] Admin [{name}] reset password for user ID {user_id}")
+        logger.info(f"Admin [{name}] reset password for user ID {user_id}")
+    
+    #print(f"[{datetime.now()}] Admin [{name}] updated user information for user ID {user_id}")
+    logger.info(f"Admin [{name}] updated user information for user ID {user_id}")
+    
+    return redirect('/chief.html')
 
 @app.errorhandler(Exception)
 def notFound(e):
@@ -330,11 +409,15 @@ def notFound(e):
     
     code = 500
     errstr = "We can't find the page you're looking for."
+    url = request.url
 
     if (user and user['isAdmin'] == 1) or DEBUG_FLAG:
         stack_trace = traceback.format_exc()
         if hasattr(e, 'code'):
             code = e.code
+        logger.error(f"{url} Error: {str(e)}\n{stack_trace}")
         errstr = f"<b>Error:</b> {str(e)}<br><br><b>Stack Trace:</b><br><pre>{stack_trace}</pre>"
+    else:
+        logger.error(f"Error: {str(e)}")
 
     return render_template('error.html', e_code=code, error=errstr)

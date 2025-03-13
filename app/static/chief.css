@@ -187,11 +187,11 @@ body {
 }
 
 .values .val-box:nth-child(1) i {
-    background: rgb(221, 235, 157);
+    background: rgb(208, 240, 192);
 }
 
 .values .val-box:nth-child(2) i {
-    background: rgb(160, 200, 120);
+    background: rgb(240, 192, 192);
 }
 
 .values .val-box:nth-child(3) i {
