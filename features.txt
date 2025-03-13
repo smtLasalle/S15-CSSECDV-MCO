@@ -6,7 +6,7 @@ TODO: (indented if dones)
     5.  User features
     6.  Admin features
     7.  Error messaging
-8.  HTTPS
+    8.  HTTPS
     9.  DB expansion
     10. Password thing
 
@@ -20,18 +20,18 @@ Notes (respective numbers with todo list):
     Preview stopped working, might fix
     2.  IP bruteforce-proc should be fine now. Need to test in production
     3.  Implementation of session timeout
-4.  Logging features for authentication, transactions, and administrative actions.
-5.  AT LEAST 2 diffent kinds of actions. (ie. post and edit). More features + more bonus!
-    Application should have a feature to save and display text input. At least 2 numeric input
-6.  AT LEAST 2 diffent kinds of admin-only actions. More features + more bonus!
+    4.  Logging features for authentication, transactions, and administrative actions.
+    5.  AT LEAST 2 diffent kinds of actions. (ie. post and edit). More features + more bonus!
+        Application should have a feature to save and display text input. At least 2 numeric input
+    6.  AT LEAST 2 diffent kinds of admin-only actions. More features + more bonus!
     7.  Error messaging. Detailed with stack trace when debug enabled. Generic error message when debug is turned off.
     Err messaging should be fine now. Need to test in production
-8.  Self-signed certificate is acceptable
+    8.  Self-signed certificate is acceptable
     9.  Implement db for user features
     10. At least 8 chars
 
 In progress:
-Log File (currently printf entries in controlller.py)
+****
 
 USERS IN DB
 zyn         | password

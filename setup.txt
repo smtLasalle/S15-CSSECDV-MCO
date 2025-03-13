@@ -1,7 +1,7 @@
 MUST HAVES : MySQL server : https://dev.mysql.com/downloads/installer/
 
 When initializing the MySQL server:
-Configurations for the server can be changed, just make sure to change app.py
+Configurations for the server can be changed, just make sure to change __init__.py
 in the database connection section
 By default:
 host = localhost
@@ -11,6 +11,7 @@ password = *insert whatever password you want*
 in CMD
 pip install flask mysql-connector-python
 pip install bcrypt
+pip install pyopenssl
 run the SQL/secdevd_dump.sql file in sql server (using cmd or workbench)
 
 open CMD in this directory, run python app.py
