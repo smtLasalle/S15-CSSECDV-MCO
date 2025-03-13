@@ -1,0 +1,38 @@
+2025-03-14 02:41:08,500 - INFO - New server session started
+2025-03-14 02:42:46,129 - INFO - IP address [127.0.0.1] logged in with username [zyn]
+2025-03-14 02:43:10,018 - INFO - User [zyn] logged out
+2025-03-14 02:43:18,534 - INFO - IP address [127.0.0.1] logged in with username [bananaman]
+2025-03-14 02:44:45,570 - INFO - User [bananaman] logged out
+2025-03-14 02:55:59,154 - INFO - New server session started
+2025-03-14 02:59:46,592 - INFO - IP address [127.0.0.1] logged in with username [zyn]
+2025-03-14 02:59:51,921 - INFO - User [zyn] removed a transaction
+2025-03-14 02:59:54,786 - INFO - User [zyn] removed a transaction
+2025-03-14 03:00:06,000 - INFO - User [zyn] added a transaction
+2025-03-14 03:00:09,266 - INFO - User [zyn] logged out
+2025-03-14 03:00:17,909 - INFO - IP address [127.0.0.1] logged in with username [admin]
+2025-03-14 03:00:34,828 - INFO - User [admin] added a goal
+2025-03-14 03:02:09,602 - INFO - Admin [admin] updated user information for user ID 2
+2025-03-14 03:02:19,254 - INFO - User [admin] logged out
+2025-03-14 03:05:26,866 - INFO - IP address [127.0.0.1] logged in with username [admin]
+2025-03-14 03:09:41,914 - INFO - New server session started
+2025-03-14 03:10:07,333 - INFO - IP address [127.0.0.1] logged in with username [zyn]
+2025-03-14 03:10:12,312 - INFO - User [zyn] logged out
+2025-03-14 03:15:01,883 - INFO - New server session started
+2025-03-14 03:15:42,786 - WARNING - IP 127.0.0.1 has been timed out due to excessive failed login attempts
+2025-03-14 03:15:44,008 - WARNING - IP address [127.0.0.1] locked out for too many login attempts
+2025-03-14 03:15:45,598 - WARNING - IP address [127.0.0.1] locked out for too many login attempts
+2025-03-14 03:18:49,162 - INFO - New server session started
+2025-03-14 03:19:00,761 - INFO - New server session started
+2025-03-14 03:19:05,667 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:19:07,868 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:19:08,942 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:19:10,052 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:19:11,091 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:19:11,092 - WARNING - IP 127.0.0.1 has been timed out due to excessive failed login attempts
+2025-03-14 03:19:11,093 - INFO - Countdown for IP 127.0.0.1 started
+2025-03-14 03:19:12,299 - WARNING - IP address [127.0.0.1] locked out for too many login attempts
+2025-03-14 03:19:31,095 - INFO - Countdown for IP 127.0.0.1 finished
+2025-03-14 03:20:54,723 - INFO - New server session started
+2025-03-14 03:21:11,418 - INFO - IP address [127.0.0.1] attempting to login with username [zyn].
+2025-03-14 03:21:19,721 - INFO - IP address [127.0.0.1] logged in with username [zyn]
+2025-03-14 03:21:37,856 - INFO - User [zyn] logged out

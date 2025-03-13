@@ -22,11 +22,11 @@ if not os.path.exists(log_directory):
 logger = logging.getLogger('budget_tracker')
 logger.setLevel(logging.INFO)
 
-# Create rotating file handler (10MB max size, keep 5 backup files)
+# Rotating file handler (10MB max size, keep 3 backup files)
 file_handler = RotatingFileHandler(
-    os.path.join(log_directory, 'budget_tracker.log'), 
+    os.path.join(log_directory, 'server.log'), 
     maxBytes=10*1024*1024, 
-    backupCount=5
+    backupCount=3
 )
 
 # Log format
@@ -34,12 +34,13 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
 
 # Console handler for dev build (comment out in production)
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
+if DEBUG_FLAG:
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
 
 # Add handlers to logger
 logger.addHandler(file_handler)
-logger.addHandler(console_handler)
 
 # Session settings
 app.config['SECRET_KEY'] = os.urandom(12)  # Secure random key
@@ -55,9 +56,9 @@ logger.info(f"New server session started")
 
 def start_background_timer(ip_address, rem):
     def timer_function():
-        logger.debug(f'Countdown for IP {ip_address} started')
+        logger.info(f'Countdown for IP {ip_address} started')
         time.sleep(LOCKOUT_DURATION)  # Wait for the specified duration
-        logger.debug(f'Countdown for IP {ip_address} finished')
+        logger.info(f'Countdown for IP {ip_address} finished')
         if not stop_event.is_set():
             timer_end(ip_address, rem)  # Call the callback function
     stop_event = threading.Event()
@@ -176,7 +177,7 @@ def login():
     else:  # Failed login
         # Check if IP is already being tracked
         #print(f"[{datetime.now()}] IP address [{ip_address}] attempting to login with username [{username}].", end=" ")
-        logger.debug(f"IP address [{ip_address}] attempting to login with username [{username}].")
+        logger.info(f"IP address [{ip_address}] attempting to login with username [{username}].")
         if ip_address not in ip_attempt_tracker:
             ip_attempt_tracker[ip_address] = 1
             #print(f"Attempts = {ip_attempt_tracker[ip_address]}")
@@ -196,9 +197,10 @@ def login():
 def saveProfile():
     picture = request.files['file']
     bytePicture = picture.read()
-    username = session.get('username')
-    if saveToDB(bytePicture, username): # USER PROFPIC CHANGES
+    name = session.get('username')
+    if saveToDB(bytePicture, name): # USER PROFPIC CHANGES
         #print(f"[{datetime.now()}] User [{username}] updated profile picture")
+        logger.info(f"User [{name}] updated their profile")
         return render_template('dashboard.html')
     return render_template('profile.html')
 
@@ -240,9 +242,9 @@ def settings():
 
 @app.route('/logout')
 def logout():
-    username = session.get('username')
+    name = session.get('username')
     #print(f"[{datetime.now()}] User [{username}] logged out")
-    logger.info(f"User [{username}] logged out")
+    logger.info(f"User [{name}] logged out")
     session.clear()
     return make_response(render_template('/budget-tracker.html'))
 
@@ -280,6 +282,7 @@ def set_balance():
     amount = request.form['amount']
     update_balance(name, amount)
     #print(f"[{datetime.now()}] User [{name}] updated balance to {amount}")
+    logger.info(f"User [{name}] updated their balance")
     
     return redirect('/dashboard.html')
 
@@ -312,6 +315,7 @@ def add_expense():
         update_balance(name, new_balance)
     
     #print(f"[{datetime.now()}] User [{name}] added {'income' if int(isIncome) else 'expense'}: {title} - {price}")
+    logger.info(f"User [{name}] added a transaction")
     
     return redirect('/dashboard.html')
 
@@ -329,6 +333,7 @@ def add_goal():
     add_user_goal(user_id, goal_name, price)
     
     #print(f"[{datetime.now()}] User [{name}] added goal: {goal_name} - {price}")
+    logger.info(f"User [{name}] added a goal")
     
     return redirect('/dashboard.html')
 
@@ -352,6 +357,7 @@ def delete_expense(expense_id):
         update_balance(name, new_balance)
         delete_expense_by_id(expense_id)
         #print(f"[{datetime.now()}] User [{name}] deleted {'income' if expense[4] else 'expense'}: {expense[1]}")
+        logger.info(f"User [{name}] removed a transaction")
     
     return redirect('/dashboard.html')
 
@@ -367,6 +373,7 @@ def delete_goal(goal_id):
     if goal and goal[0] == user['user_id']:
         delete_goal_by_id(goal_id)
         #print(f"[{datetime.now()}] User [{name}] deleted goal: {goal[1]}")
+        logger.info(f"User [{name}] removed a goal")
     
     return redirect('/dashboard.html')
 
