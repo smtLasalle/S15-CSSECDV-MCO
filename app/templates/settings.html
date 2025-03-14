@@ -24,23 +24,20 @@
                 <h3>Personal Info</h3>
                 <div class="info_data">
                     <div class="data">
-                        <h4>Full Name</h4>
-                        <p>...... ........</p>
+                        <h4>First Name</h4>
+                        <input type="text" class="input" value="First name">
+                    </div>
+                    <div class="data">
+                        <h4>Last Name</h4>
+                        <input type="text" class="input" value="Last name">
                     </div>
                     <div class="data">
                         <h4>Username</h4>
-                        <input type="text" class="input" value="abcd">
+                        <input type="text" class="input" value="username">
                     </div>
                     <div class="data">
                         <h4>Email</h4>
                         <input type="email" class="input" value="abc@gmail.com">
-                    </div>
-                    <div class="data">
-                        <h4>Gender</h4>
-                        <input type="radio" id="male" name="gender" value="Male">
-                        <label for="male">MALE</label>
-                        <input type="radio" id="female" name="gender" value="Female">
-                        <label for="female">FEMALE</label>
                     </div>
                     <div class="data">
                         <h4>Birthday</h4>
@@ -70,36 +67,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    const tabBtn=document.querySelectorAll(".tab");
-    const tab=document.querySelectorAll(".info");
-
-    function tabs(index) {
-        tabBtn.forEach(function (button, i) {
-            if (i === index) {
-                button.classList.add("active");
-            } else {
-                button.classList.remove("active");
-            }
-        });
-
-        tab.forEach(function (node, i) {
-            if (i === index) {
-                node.style.display="block";
-            } else {
-                node.style.display="none";
-            }
-        });
-    }
-
-    // Initialize the first tab as active
-    tabs(0);
-
-    // Add event listeners to tab buttons
-    tabBtn.forEach(function (button, index) {
-        button.addEventListener('click', function () {
-            tabs(index);
-        });
-    });
-</script>
+<script src="{{url_for('static', filename='settings.js')}}"></script>
 {% endblock %}
