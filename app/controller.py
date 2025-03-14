@@ -201,8 +201,14 @@ def saveProfile():
     if saveToDB(bytePicture, name): # USER PROFPIC CHANGES
         #print(f"[{datetime.now()}] User [{username}] updated profile picture")
         logger.info(f"User [{name}] updated their profile")
-        return render_template('dashboard.html')
-    return render_template('profile.html')
+        return redirect('dashboard.html')
+    else:
+        user = retrieveData(name)
+        err = "Error uploading file!"
+        if not user['image']:
+            return render_template('profile.html', **user, defaultHidden="", profHidden="hidden", error_message=err)
+        return render_template('profile.html',**user, defaultHidden="hidden", profHidden="", error_message=err)
+
 
 @app.route('/dashboard.html')
 def dashboard():

@@ -2,7 +2,7 @@ from app import db
 import bcrypt
 import base64
 import re
-
+import io
 
 def getID(inc):
     cursor = db.cursor()
@@ -135,6 +135,19 @@ def saveToDB(data, username):
         return False
     
     user_id = result[0]
+    valid = False
+    
+    signatures = {
+                b'\xff\xd8\xff': 'JPEG',
+                b'\x89PNG\r\n\x1a\n': 'PNG',
+            }
+            
+    for sig, format_name in signatures.items():
+        if data.startswith(sig):
+            valid = True
+    
+    if not valid:       
+        return False
     
     try:
         if result:
